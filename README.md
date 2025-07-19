@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/images/react-logo.png" alt="React Expo Docs App Logo" width="120"/>
+  <img src="assets/images/react-logo.png" alt="Learning Blossom - Docs App Logo" width="120"/>
 </p>
 
 <p align="center">
@@ -10,7 +10,7 @@
   <img src="https://img.shields.io/github/last-commit/your-username/your-repo" alt="Last Commit"/>
 </p>
 
-# React Expo Docs App
+# Learning Blossom Docs App
 
 ---
 
