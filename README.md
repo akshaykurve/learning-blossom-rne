@@ -1,5 +1,71 @@
 # React Expo Docs App
 
+---
+
+## Table of Contents
+- [Overview](#overview)
+- [HTML Documentation](#html-documentation)
+  - [Introduction](#introduction)
+  - [Basic Syntax](#basic-syntax)
+  - [Document Structure](#document-structure)
+  - [Elements & Attributes](#elements--attributes)
+  - [Text & Headings](#text--headings)
+  - [Links & Images](#links--images)
+  - [Lists](#lists)
+  - [Tables](#tables)
+  - [Forms & Inputs](#forms--inputs)
+  - [Semantic Elements](#semantic-elements)
+  - [Multimedia](#multimedia)
+  - [Meta & SEO](#meta--seo)
+  - [Accessibility](#accessibility)
+  - [Best Practices](#best-practices)
+  - [Web Components & Shadow DOM](#web-components--shadow-dom)
+  - [ARIA & Accessibility](#aria--accessibility)
+  - [HTML Security](#html-security)
+  - [HTML Performance](#html-performance)
+  - [Service Workers & Offline HTML](#service-workers--offline-html)
+  - [Structured Data](#structured-data-microdata-rdfa-json-ld)
+  - [HTML5 Global Attributes](#html5-global-attributes-partial)
+  - [References & Resources](#references--resources)
+- [CSS Documentation](#css-documentation)
+  - [Introduction](#introduction-1)
+  - [Syntax & Structure](#syntax--structure)
+  - [Selectors](#selectors)
+  - [Specificity & Cascade](#specificity--cascade)
+  - [Box Model](#box-model)
+  - [Layout: Block, Inline, Position](#layout-block-inline-position)
+  - [Flexbox](#flexbox)
+  - [CSS Grid](#css-grid)
+  - [Custom Properties (Variables)](#custom-properties-variables)
+  - [Transitions & Animations](#transitions--animations)
+  - [Responsive Design](#responsive-design)
+  - [Preprocessors & PostCSS](#preprocessors--postcss)
+  - [Browser Support & Prefixes](#browser-support--prefixes)
+  - [Best Practices](#best-practices-1)
+  - [References & Resources](#references--resources-1)
+- [JavaScript Documentation](#javascript-documentation)
+  - [Introduction](#introduction-2)
+  - [Syntax & Structure](#syntax--structure-1)
+  - [Types & Type Coercion](#types--type-coercion)
+  - [Variables & Scope](#variables--scope)
+  - [Operators & Expressions](#operators--expressions)
+  - [Control Flow](#control-flow)
+  - [Functions & Closures](#functions--closures)
+  - [Objects & Prototypes](#objects--prototypes)
+  - [Arrays & Iteration](#arrays--iteration)
+  - [DOM & Events](#dom--events)
+  - [Asynchronous JavaScript](#asynchronous-javascript)
+  - [ES6+ Features](#es6-features)
+  - [OOP & Classes](#oop--classes)
+  - [Patterns & Modules](#patterns--modules)
+  - [Modules & Bundling](#modules--bundling)
+  - [Browser APIs & BOM](#browser-apis--bom)
+  - [Error Handling](#error-handling)
+  - [Best Practices](#best-practices-2)
+  - [References & Resources](#references--resources-2)
+
+---
+
 ## Overview
 
 This app is a comprehensive, interactive documentation and learning resource for HTML, CSS, and JavaScript. Built with React Native and Expo, it provides:
@@ -14,6 +80,8 @@ You can use this app as a reference, a learning tool, or a quick lookup for web 
 ---
 
 # HTML Documentation
+
+---
 
 ## Introduction
 HTML (HyperText Markup Language) is the standard markup language for documents designed to be displayed in a web browser. It can be assisted by technologies such as CSS and JavaScript to create rich, interactive websites. HTML describes the structure of a web page semantically and originally included cues for the appearance of the document.
@@ -375,6 +443,8 @@ spellcheck // Enable spell checking
 
 # CSS Documentation
 
+---
+
 ## Introduction
 CSS (Cascading Style Sheets) is the language used to describe the presentation of HTML or XML documents. CSS controls layout, colors, fonts, spacing, and much more.
 
@@ -546,6 +616,8 @@ Use [caniuse.com](https://caniuse.com/) to check browser support. Use vendor pre
 ---
 
 # JavaScript Documentation
+
+---
 
 ## Introduction
 JavaScript (JS) is a high-level, interpreted, multi-paradigm programming language that powers the dynamic behavior of most websites. It is essential for web interactivity, client-side logic, and modern web applications. JavaScript can also run on servers (Node.js), IoT devices, and even databases.
