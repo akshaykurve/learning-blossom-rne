@@ -1,3 +1,9 @@
+<p align="center">
+  <img src="https://img.shields.io/badge/build-passing-brightgreen" alt="Build Status"/>
+  <img src="https://img.shields.io/badge/license-MIT-blue" alt="License"/>
+  <img src="https://img.shields.io/badge/docs-available-important" alt="Documentation"/>
+</p>
+
 # React Expo Docs App
 
 ---
@@ -328,6 +334,11 @@ this.dispatchEvent(new CustomEvent('my-event', { detail: { foo: 1 }, bubbles: tr
 
 **SEO:** Use `is` attribute or fallback content for custom elements to ensure they are indexed.
 
+</details>
+
+<details>
+<summary><strong>Advanced: ARIA & Accessibility</strong></summary>
+
 ## ARIA & Accessibility
 ARIA (Accessible Rich Internet Applications) provides attributes to make web content and applications more accessible to people with disabilities.
 
@@ -346,6 +357,11 @@ ARIA (Accessible Rich Internet Applications) provides attributes to make web con
 <div aria-live="polite">New notifications will appear here.</div>
 ```
 > **Tip:** Test accessibility with screen readers and keyboard navigation.
+
+</details>
+
+<details>
+<summary><strong>Advanced: HTML Security, Performance, Service Workers, Structured Data</strong></summary>
 
 ## HTML Security
 **XSS (Cross-Site Scripting):** Never trust user input. Always escape or sanitize data before inserting into the DOM.
@@ -433,6 +449,8 @@ draggable  // Enable drag & drop
 spellcheck // Enable spell checking
 ```
 > **Tip:** All HTML elements support these global attributes unless otherwise specified.
+
+</details>
 
 ## References & Resources
 - [MDN Web Docs: HTML](https://developer.mozilla.org/en-US/docs/Web/HTML)
@@ -608,10 +626,15 @@ Use [caniuse.com](https://caniuse.com/) to check browser support. Use vendor pre
 
 > **Tip:** Keep your CSS clean, DRY, and well-documented for maintainability.
 
+<details>
+<summary><strong>Advanced: Preprocessors, PostCSS, Browser Support, Best Practices</strong></summary>
+
 ## References & Resources
 - [MDN CSS Docs](https://developer.mozilla.org/en-US/docs/Web/CSS)
 - [CSS-Tricks](https://css-tricks.com/)
 - [Can I use](https://caniuse.com/)
+
+</details>
 
 ---
 
@@ -1086,9 +1109,35 @@ const bar = 1;
 > **Tip:** Use tools like ESLint and Prettier to enforce code style and catch bugs early.
 > **Warning:** Don&#39;t repeat yourself (DRY). Refactor duplicated code into functions or modules.
 
+<details>
+<summary><strong>Advanced: OOP, Patterns, Modules, Bundling, BOM, Error Handling</strong></summary>
+
 ## References & Resources
 - [MDN JS Docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 - [JavaScript.info](https://javascript.info/)
 - [ECMAScript Spec](https://tc39.es/ecma262/)
 
+</details>
+
 ---
+
+## Contributing
+
+Contributions are welcome! Please open issues or pull requests for improvements, bug fixes, or new features. For major changes, please discuss them in an issue first.
+
+---
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+<!-- Blockquote style for subtle color highlight -->
+<style>
+blockquote {
+  background: #f9f9ff;
+  border-left: 4px solid #6C63FF;
+  margin: 1em 0;
+  padding: 0.8em 1.2em;
+  color: #333;
+}
+</style>
