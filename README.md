@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/images/react-logo.png" alt="Learning Blossom - Docs App Logo" width="120"/>
+  <img src="assets/images/logo.png" alt="Learning Blossom - Docs App Logo" width="120"/>
 </p>
 
 <p align="center">

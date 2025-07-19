@@ -226,7 +226,7 @@ export default function Index() {
         <Animated.View style={[luxuryStyles.goldBlob, goldBlobStyle, goldBlobShimmerStyle]} />
         <Animated.View style={[luxuryStyles.heroCard, heroCardStyle]}>
           <Animated.Image
-            source={require("../../assets/images/react-logo.png")}
+            source={require("../../assets/images/logo.png")}
             style={[luxuryStyles.logo, typewriterDone ? logoPulseStyle : {}, { shadowColor: LUXURY.gold, shadowOpacity: 0.3, shadowRadius: 16, shadowOffset: { width: 0, height: 8 } }]}
             resizeMode="contain"
           />
