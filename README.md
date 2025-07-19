@@ -375,12 +375,648 @@ spellcheck // Enable spell checking
 
 # CSS Documentation
 
-... (CSS content will be inserted here)
+## Introduction
+CSS (Cascading Style Sheets) is the language used to describe the presentation of HTML or XML documents. CSS controls layout, colors, fonts, spacing, and much more.
+
+> **Tip:** CSS is supported by all modern browsers and is essential for responsive, accessible, and visually appealing web design.
+
+## Syntax & Structure
+CSS consists of selectors and declaration blocks. Each declaration includes a property and a value, separated by a colon and ended with a semicolon.
+
+```css
+selector {
+  property: value;
+}
+```
+> **Tip:** Use consistent indentation and spacing for readability.
+
+## Selectors
+Selectors target HTML elements to apply styles. Types include element, class, ID, attribute, pseudo-class, and pseudo-element selectors.
+
+```css
+/* Element */
+p { color: blue; }
+/* Class */
+.button { background: gold; }
+/* ID */
+#main { padding: 1rem; }
+/* Attribute */
+input[type="text"] { border: 1px solid #ccc; }
+/* Pseudo-class */
+a:hover { color: red; }
+/* Pseudo-element */
+p::first-line { font-weight: bold; }
+```
+> **Tip:** Use class selectors for reusable styles and avoid overusing ID selectors.
+
+## Specificity & Cascade
+Specificity determines which CSS rule applies if multiple rules match the same element. The cascade is the order in which rules are applied.
+
+```css
+/* Specificity: ID > class > element */
+#main { color: red; }   /* specificity: 100 */
+.button { color: blue; } /* specificity: 10 */
+p { color: green; }     /* specificity: 1 */
+```
+> **Tip:** Use browser DevTools to inspect and debug specificity issues.
+
+## Box Model
+Every element is a rectangular box. The box model consists of content, padding, border, and margin.
+
+```css
+div {
+  width: 200px;
+  padding: 10px;
+  border: 2px solid #333;
+  margin: 20px;
+}
+```
+> **Tip:** Use `box-sizing: border-box` to include padding and border in the element's total width and height.
+
+## Layout: Block, Inline, Position
+CSS controls how elements are displayed: block, inline, inline-block, and positioned (relative, absolute, fixed, sticky).
+
+```css
+span { display: inline; }
+div { display: block; }
+.menu { position: fixed; top: 0; }
+```
+> **Tip:** Use `position: sticky` for sticky headers and sidebars.
+
+## Flexbox
+Flexbox is a layout model for distributing space and aligning items in a container, even when their size is unknown.
+
+```css
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+```
+> **Tip:** Use `gap` for spacing between flex items (supported in all modern browsers).
+
+## CSS Grid
+CSS Grid is a two-dimensional layout system for the web. It allows you to create complex layouts easily.
+
+```css
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 16px;
+}
+```
+> **Tip:** Use `minmax` and `auto-fit` for responsive grids.
+
+## Custom Properties (Variables)
+CSS variables allow you to store values for reuse throughout your stylesheet.
+
+```css
+:root {
+  --main-color: #6C63FF;
+}
+.button {
+  background: var(--main-color);
+}
+```
+> **Tip:** Variables are inherited and can be dynamically changed with JavaScript.
+
+## Transitions & Animations
+CSS transitions and animations allow you to animate changes to properties.
+
+```css
+.box {
+  transition: background 0.3s ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+```
+> **Tip:** Use `will-change` for performance optimization of animating properties.
+
+## Responsive Design
+Use media queries, relative units, and modern layout techniques to create responsive designs.
+
+```css
+@media (max-width: 600px) {
+  .container { flex-direction: column; }
+}
+```
+> **Tip:** Use `rem` and `em` units for scalable layouts.
+
+## Preprocessors & PostCSS
+CSS preprocessors like SASS, LESS, and Stylus add features like variables, nesting, and mixins. PostCSS is a tool for transforming CSS with JavaScript plugins.
+
+```scss
+$main-color: #6C63FF;
+.button {
+  background: $main-color;
+}
+```
+> **Tip:** Use autoprefixer with PostCSS to add vendor prefixes automatically.
+
+## Browser Support & Prefixes
+Use [caniuse.com](https://caniuse.com/) to check browser support. Use vendor prefixes for experimental features.
+
+```css
+/* Vendor prefixes */
+.box {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}
+```
+> **Tip:** Use tools like Autoprefixer to automate prefixing.
+
+## Best Practices
+- Keep CSS modular and reusable.
+- Use BEM or other naming conventions for classes.
+- Minimize specificity and avoid !important.
+- Test in all major browsers and devices.
+- Use CSS variables and custom properties for theming.
+
+> **Tip:** Keep your CSS clean, DRY, and well-documented for maintainability.
+
+## References & Resources
+- [MDN CSS Docs](https://developer.mozilla.org/en-US/docs/Web/CSS)
+- [CSS-Tricks](https://css-tricks.com/)
+- [Can I use](https://caniuse.com/)
 
 ---
 
 # JavaScript Documentation
 
-... (JS content will be inserted here)
+## Introduction
+JavaScript (JS) is a high-level, interpreted, multi-paradigm programming language that powers the dynamic behavior of most websites. It is essential for web interactivity, client-side logic, and modern web applications. JavaScript can also run on servers (Node.js), IoT devices, and even databases.
+
+JS is single-threaded, event-driven, and uses a prototype-based inheritance model. It supports functional, imperative, and object-oriented programming styles.
+
+> **Tip:** JavaScript is standardized as ECMAScript (ES). The latest version is ES2023, but ES6 (2015) introduced most modern features.
+> **Warning:** JavaScript is not the same as Java. They are different languages with different purposes.
+
+## Syntax & Structure
+JavaScript syntax is C-like. Statements end with semicolons (optional but recommended). Code blocks use curly braces. Identifiers are case-sensitive. Whitespace is ignored except inside strings.
+
+```js
+// Single-line comment
+/* Multi-line comment */
+let x = 5;
+if (x > 0) {
+  console.log('Positive');
+}
+// Automatic Semicolon Insertion (ASI)
+let y = 1
+let z = 2
+[y, z].forEach(console.log)
+```
+> **Tip:** Use strict mode (`'use strict'`) to catch common bugs and enable safer JavaScript.
+> **Warning:** Automatic Semicolon Insertion (ASI) can cause bugs. Always use semicolons to avoid pitfalls.
+
+## Types & Type Coercion
+JavaScript has 8 types: string, number, boolean, null, undefined, symbol, bigint, and object (including arrays, functions, dates, etc.). Types are dynamic and can change at runtime.
+
+```js
+typeof 42; // "number"
+typeof 'hi'; // "string"
+typeof null; // "object" (quirk)
+typeof undefined; // "undefined"
+typeof Symbol('s'); // "symbol"
+typeof 10n; // "bigint"
+typeof [1,2,3]; // "object"
+typeof function(){}; // "function"
+```
+**Type Coercion:** JS automatically converts types in some operations. This can lead to unexpected results.
+
+```js
+1 + '2' // "12" (number + string = string)
+1 - '2' // -1 (string converted to number)
+false == 0 // true (loose equality)
+false === 0 // false (strict equality)
+```
+> **Warning:** Always use `===` for strict equality to avoid type coercion bugs.
+> **Tip:** Use `Number()`, `String()`, `Boolean()` for explicit conversion.
+
+**Truthy & Falsy Values:** Falsy: `false, 0, '', null, undefined, NaN`. Everything else is truthy.
+
+```js
+Boolean(0); // false
+Boolean(''); // false
+Boolean([]); // true
+Boolean({}); // true
+```
+> **Tip:** Use `!!` to convert a value to boolean.
+
+## Variables & Scope
+Use `let` and `const` for block-scoped variables. `var` is function-scoped and hoisted. Variables declared without a keyword become global (not recommended).
+
+```js
+let a = 1;
+const b = 2;
+var c = 3;
+function test() {
+  var d = 4;
+  if (true) {
+    let e = 5;
+    const f = 6;
+  }
+  // console.log(e); // ReferenceError
+}
+```
+**Hoisting:** `var` declarations are hoisted and initialized as undefined. `let` and `const` are hoisted but not initialized (temporal dead zone).
+
+```js
+console.log(x); // undefined
+var x = 5;
+console.log(y); // ReferenceError
+let y = 10;
+```
+> **Tip:** Always declare variables at the top of their scope. Prefer `const` for values that do not change.
+> **Warning:** Avoid using global variables. They can lead to hard-to-find bugs and conflicts.
+
+## Operators & Expressions
+**Definition:** Operators are special symbols or keywords that perform operations on operands (values and variables). Expressions combine values, variables, and operators to produce a result.
+
+**Types of Operators:**
+- Arithmetic: `+`, `-`, `*`, `/`, `%`, `**`
+- Assignment: `=`, `+=`, `-=`, `*=`, `/=`, `%=`, `**=`
+- Comparison: `==`, `===`, `!=`, `!==`, `>`, `<`, `>=`, `<=`
+- Logical: `&&`, `||`, `!`
+- Bitwise: `&`, `|`, `^`, `~`, `<<`, `>>`, `>>>`
+- Ternary: `condition ? expr1 : expr2`
+- Nullish Coalescing: `??`
+- Optional Chaining: `?.`
+
+```js
+let a = 5, b = 2;
+a += b; // 7
+let isEqual = (a === b); // false
+let result = a > b ? 'a is greater' : 'b is greater';
+let safe = user?.profile?.email ?? 'No email';
+```
+**Edge Cases:**
+- `==` vs `===`: `0 == false` is true, but `0 === false` is false.
+- Division by zero: `1/0` is `Infinity`.
+- Chained assignments: `let x = y = 10;` (y becomes global if not declared).
+
+> **Tip:** Use `??` to provide defaults only for `null` or `undefined`.
+> **Warning:** Always use `===` and `!==` for comparisons to avoid coercion bugs.
+> **Tip:** Use parentheses to clarify complex expressions and avoid ambiguity.
+
+## Control Flow
+**Definition:** Control flow statements determine the order in which code is executed. JavaScript provides conditional statements, loops, and error handling constructs.
+
+**Types of Control Flow:**
+- Conditional: `if`, `else`, `else if`, `switch`
+- Loops: `for`, `while`, `do...while`, `for...in`, `for...of`
+- Jump: `break`, `continue`, `return`
+- Error Handling: `try`, `catch`, `finally`, `throw`
+
+```js
+if (score > 90) {
+  grade = 'A';
+} else if (score > 80) {
+  grade = 'B';
+} else {
+  grade = 'C';
+}
+
+for (let i = 0; i < 3; i++) {
+  if (i === 1) continue;
+  if (i === 2) break;
+  console.log(i);
+}
+
+try {
+  throw new Error('Oops');
+} catch (e) {
+  console.error(e);
+} finally {
+  console.log('Done');
+}
+```
+**Edge Cases & Best Practices:**
+- `switch` uses strict comparison (`===`) for case matching.
+- Always use `break` in `switch` cases to avoid fall-through.
+- Avoid infinite loops by ensuring loop conditions will eventually be false.
+- Use `try/catch` for error handling, especially with async/await.
+
+> **Tip:** Use `for...of` for iterating arrays and `for...in` for objects (but beware of prototype properties).
+> **Warning:** Never use `return` outside of a function. Avoid `goto` (not supported in JS).
+
+## Functions & Closures
+**Definition:** Functions are reusable blocks of code. Closures are functions that remember the scope in which they were created, even after that scope has exited.
+
+**Types of Functions:**
+- Function Declaration: `function foo() {}`
+- Function Expression: `const foo = function() {}`
+- Arrow Function: `const foo = () => {}`
+- IIFE: `(function() {})()`
+
+```js
+function add(a, b) {
+  return a + b;
+}
+const sub = (a, b) => a - b;
+const makeCounter = () => {
+  let count = 0;
+  return function() { count++; return count; };
+};
+const counter = makeCounter();
+counter(); // 1
+counter(); // 2
+```
+**Edge Cases & Best Practices:**
+- Function declarations are hoisted, but expressions are not.
+- Arrow functions do not have their own `this`, `arguments`, or `new.target`.
+- Closures can lead to memory leaks if not managed properly.
+- Use default parameters and rest/spread for flexible APIs.
+
+> **Tip:** Use closures for data privacy and factory functions.
+> **Warning:** Avoid using `arguments` object in arrow functions.
+
+## Objects & Prototypes
+**Definition:** Objects are collections of key-value pairs. Prototypes enable inheritance and sharing of methods and properties between objects.
+
+**Object Creation:**
+- Object Literal: `{}`
+- Constructor: `new Object()`
+- `Object.create(proto)`
+
+```js
+const obj = { a: 1, b: 2 };
+obj.c = 3;
+console.log(obj.a);
+// Prototypal inheritance
+const parent = { greet() { return 'hi'; } };
+const child = Object.create(parent);
+child.greet();
+// Property descriptors
+Object.defineProperty(obj, 'd', { value: 4, writable: false });
+```
+**Edge Cases & Best Practices:**
+- Use `Object.keys`, `Object.values`, and `Object.entries` for iteration.
+- Use `get` and `set` for computed properties.
+- Avoid modifying `__proto__` directly.
+- Use `Object.freeze` to make objects immutable.
+
+> **Tip:** Use `Object.assign` for shallow copies and `structuredClone` for deep copies.
+> **Warning:** Be careful with property shadowing and prototype pollution.
+
+## Arrays & Iteration
+**Definition:** Arrays are ordered lists of values. JavaScript arrays are dynamic, can hold mixed types, and have many built-in methods for iteration and transformation.
+
+**Array Methods:**
+- Iteration: `forEach`, `map`, `filter`, `reduce`, `some`, `every`, `find`, `findIndex`
+- Mutation: `push`, `pop`, `shift`, `unshift`, `splice`, `sort`, `reverse`
+- Access: `at`, `includes`, `indexOf`, `join`, `slice`, `concat`
+
+```js
+const arr = [1, 2, 3];
+arr.push(4);
+arr.map(x => x * 2);
+arr.filter(x => x % 2 === 0);
+arr.reduce((sum, x) => sum + x, 0);
+// Iterators
+for (const val of arr) { console.log(val); }
+// Spread
+const arr2 = [...arr, 5];
+```
+**Edge Cases & Best Practices:**
+- Arrays can be sparse (missing indices).
+- Not all objects with a length property are arrays (e.g., arguments, NodeList).
+- Use `Array.from` to convert array-like objects.
+- Prefer `map/filter/reduce` for functional programming.
+
+```js
+function sum() {
+  return Array.from(arguments).reduce((a, b) => a + b, 0);
+}
+```
+> **Tip:** Use `find`, `some`, and `every` for expressive array logic.
+> **Warning:** Be careful with `sort` (it mutates the array and sorts lexicographically by default).
+
+## DOM & Events
+**Definition:** The Document Object Model (DOM) is a tree-like structure representing the content of a web page. JavaScript can manipulate the DOM to change content, structure, and style dynamically. Events are actions or occurrences (like clicks or keypresses) that JavaScript can respond to.
+
+**Common DOM Methods & Events:**
+- `getElementById`, `querySelector`, `querySelectorAll` for selecting elements
+- `addEventListener`, `removeEventListener` for handling events
+- `innerHTML`, `textContent`, `style` for modifying content and style
+
+```js
+const btn = document.getElementById('myBtn');
+btn.addEventListener('click', function(e) {
+  alert('Button clicked!');
+});
+document.querySelectorAll('.item').forEach(el => el.style.color = 'red');
+```
+**Edge Cases & Best Practices:**
+- Always remove event listeners when elements are removed to prevent memory leaks.
+- Use event delegation for better performance on many similar elements.
+- Avoid direct DOM manipulation in frameworks like React; use state and props instead.
+
+> **Tip:** Use `event.target` to access the element that triggered the event.
+> **Warning:** Direct DOM manipulation can cause bugs in modern frameworks. Prefer declarative updates.
+
+## Asynchronous JavaScript
+**Definition:** JavaScript is single-threaded but supports asynchronous operations via callbacks, promises, and async/await. This allows non-blocking code for tasks like network requests and timers.
+
+**Async Patterns:**
+- `setTimeout`, `setInterval` for timers
+- `Promise` for chaining async operations
+- `async/await` for readable async code
+
+```js
+setTimeout(() => console.log('Later'), 1000);
+function fetchData() {
+  return new Promise(resolve => setTimeout(() => resolve('done'), 500));
+}
+async function main() {
+  const result = await fetchData();
+  console.log(result);
+}
+main();
+```
+**Edge Cases & Best Practices:**
+- Always handle promise rejections to avoid unhandled errors.
+- Use `Promise.all` for parallel async operations.
+- Avoid callback hell by using promises or async/await.
+
+> **Tip:** Use `await` inside `try/catch` for error handling in async functions.
+> **Warning:** Never block the main thread with long-running synchronous code.
+
+## ES6+ Features
+**Definition:** ES6 (ECMAScript 2015) and later versions introduced major improvements to JavaScript, including new syntax, data structures, and features for better code organization and performance.
+
+**Key Features:**
+- `let`, `const` for block-scoped variables
+- Arrow functions for concise function syntax
+- Template literals for multi-line and interpolated strings
+- Destructuring for extracting values from arrays/objects
+- Spread/rest for flexible function arguments and array/object manipulation
+- Classes, modules, promises, sets, maps, symbols, async/await
+
+```js
+const [a, b] = [1, 2];
+const obj = { x: 1, y: 2 };
+const { x, y } = obj;
+const arr = [1, 2, 3];
+const arr2 = [...arr, 4];
+```
+**Edge Cases & Best Practices:**
+- Use `const` by default; use `let` only when reassignment is needed.
+- Arrow functions do not bind their own `this`.
+- Destructuring can provide default values and rename variables.
+
+> **Tip:** Use `import()` for dynamic imports and code splitting.
+> **Warning:** Be aware of browser compatibility for newer features.
+
+## OOP & Classes
+**Definition:** Object-Oriented Programming (OOP) in JavaScript is based on prototypes and ES6 classes. Classes provide a cleaner syntax for creating objects and inheritance.
+
+**Class Syntax & Inheritance:**
+- `class`, `constructor`, `extends`, `super`
+- Methods, getters, setters, static methods
+
+```js
+class Animal {
+  constructor(name) {
+    this.name = name;
+  }
+  speak() {
+    return this.name + ' makes a noise.';
+  }
+}
+class Dog extends Animal {
+  speak() {
+    return this.name + ' barks.';
+  }
+}
+```
+**Edge Cases & Best Practices:**
+- Use `super` to call parent methods in subclasses.
+- Classes are syntactic sugar over prototypes.
+- Use `static` for utility methods that do not access instance data.
+
+> **Tip:** Use classes for complex data models and inheritance hierarchies.
+> **Warning:** Avoid deep inheritance chains; prefer composition over inheritance when possible.
+
+## Patterns & Modules
+**Definition:** Design patterns are reusable solutions to common problems. Modules help organize code into reusable, maintainable files.
+
+**Common Patterns:**
+- Module: Encapsulates code and exposes a public API
+- Singleton: Ensures a class has only one instance
+- Factory: Creates objects without specifying the exact class
+- Observer: Allows objects to subscribe to events
+
+```js
+// Module pattern
+const MyModule = (function() {
+  let privateVar = 0;
+  return {
+    inc() { privateVar++; return privateVar; }
+  };
+})();
+// ES6 module
+// export function foo() {}
+// import { foo } from './foo.js';
+```
+**Edge Cases & Best Practices:**
+- Use modules to split code into reusable files.
+- Use bundlers (Webpack, Vite, Parcel) for production.
+- Avoid polluting the global namespace.
+
+> **Tip:** Use `import()` for dynamic imports and code splitting.
+> **Warning:** Mixing CommonJS and ES6 modules can cause issues; stick to one system per project.
+
+## Modules & Bundling
+**Definition:** ES6 modules use `import` and `export` to organize code. Bundlers combine modules for deployment.
+
+```js
+// foo.js
+export function foo() { return 42; }
+// main.js
+import { foo } from './foo.js';
+```
+**Edge Cases & Best Practices:**
+- Use relative or absolute paths in imports.
+- Use dynamic imports for lazy loading.
+- Avoid circular dependencies.
+
+> **Tip:** Use bundlers to optimize and tree-shake your code for production.
+> **Warning:** Be aware of module resolution differences between Node.js and browsers.
+
+## Browser APIs & BOM
+**Definition:** The Browser Object Model (BOM) provides access to browser features outside the DOM, such as `window`, `navigator`, `location`, `history`, and `screen`.
+
+**Common APIs:**
+- `localStorage`, `sessionStorage` for persistent storage
+- `fetch` for network requests
+- `window.addEventListener` for global events
+
+```js
+localStorage.setItem('key', 'value');
+const value = localStorage.getItem('key');
+window.addEventListener('resize', () => console.log(window.innerWidth));
+```
+**Edge Cases & Best Practices:**
+- Always check for API support before using (feature detection).
+- Use [caniuse.com](https://caniuse.com/) to check browser compatibility.
+
+> **Tip:** Use `window` for global variables and functions, but avoid polluting the global scope.
+> **Warning:** Not all browser APIs are available in Node.js or all browsers.
+
+## Error Handling
+**Definition:** Error handling lets you gracefully manage unexpected situations. Use `try`, `catch`, `finally`, and `throw` to handle and raise errors.
+
+```js
+try {
+  throw new Error('Something went wrong');
+} catch (e) {
+  console.error(e.message);
+} finally {
+  cleanup();
+}
+// Custom error
+class MyError extends Error {
+  constructor(msg) { super(msg); this.name = 'MyError'; }
+}
+```
+**Edge Cases & Best Practices:**
+- Always clean up resources in `finally` blocks.
+- Never swallow errors silently; log or handle them appropriately.
+- Use custom error classes for better error management.
+
+> **Tip:** Use `try/catch` with `await` for error handling in async functions.
+> **Warning:** Throwing non-Error objects can make debugging harder.
+
+## Best Practices
+**General Guidelines:**
+- Use `const` and `let` instead of `var`.
+- Prefer arrow functions for callbacks.
+- Avoid global variables.
+- Use strict equality (`===`).
+- Document your code and use linters.
+- Write modular, reusable code.
+- Test in all major browsers and devices.
+
+```js
+// Bad
+var foo = 1;
+foo = 2;
+// Good
+const bar = 1;
+// Arrow function
+[1,2,3].forEach(x => console.log(x));
+```
+> **Tip:** Use tools like ESLint and Prettier to enforce code style and catch bugs early.
+> **Warning:** Don&#39;t repeat yourself (DRY). Refactor duplicated code into functions or modules.
+
+## References & Resources
+- [MDN JS Docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+- [JavaScript.info](https://javascript.info/)
+- [ECMAScript Spec](https://tc39.es/ecma262/)
 
 ---
