@@ -1,7 +1,13 @@
 <p align="center">
+  <img src="assets/images/react-logo.png" alt="React Expo Docs App Logo" width="120"/>
+</p>
+
+<p align="center">
   <img src="https://img.shields.io/badge/build-passing-brightgreen" alt="Build Status"/>
   <img src="https://img.shields.io/badge/license-MIT-blue" alt="License"/>
   <img src="https://img.shields.io/badge/docs-available-important" alt="Documentation"/>
+  <img src="https://img.shields.io/github/issues/your-username/your-repo" alt="Open Issues"/>
+  <img src="https://img.shields.io/github/last-commit/your-username/your-repo" alt="Last Commit"/>
 </p>
 
 # React Expo Docs App
@@ -10,6 +16,8 @@
 
 ## Table of Contents
 - [Overview](#overview)
+- [Quick Start](#quick-start)
+- [Screenshots](#screenshots)
 - [HTML Documentation](#html-documentation)
   - [Introduction](#introduction)
   - [Basic Syntax](#basic-syntax)
@@ -69,6 +77,10 @@
   - [Error Handling](#error-handling)
   - [Best Practices](#best-practices-2)
   - [References & Resources](#references--resources-2)
+- [FAQ](#faq)
+- [Acknowledgements](#acknowledgements)
+- [Contributing](#contributing)
+- [License](#license)
 
 ---
 
@@ -82,6 +94,26 @@ This app is a comprehensive, interactive documentation and learning resource for
 - Modern, readable, and mobile-friendly design
 
 You can use this app as a reference, a learning tool, or a quick lookup for web development essentials.
+
+---
+
+## Quick Start
+
+1. **Clone the repo:**  
+   `git clone https://github.com/your-username/your-repo.git`
+2. **Install dependencies:**  
+   `npm install`
+3. **Run the app:**  
+   `npx expo start`
+
+---
+
+## Screenshots
+
+<p align="center">
+  <img src="assets/images/screenshot1.png" width="250" alt="App Screenshot 1"/>
+  <img src="assets/images/screenshot2.png" width="250" alt="App Screenshot 2"/>
+</p>
 
 ---
 
@@ -1118,6 +1150,36 @@ const bar = 1;
 - [ECMAScript Spec](https://tc39.es/ecma262/)
 
 </details>
+
+---
+
+## FAQ
+
+<details>
+<summary><strong>Why doesn't the app start?</strong></summary>
+Make sure you have Node.js and Expo CLI installed. Run <code>npm install</code> before starting.
+</details>
+
+<details>
+<summary><strong>How do I add new documentation pages?</strong></summary>
+Create a new file in the <code>app/(tabs)/</code> directory and follow the structure of the existing pages. Update navigation as needed.
+</details>
+
+<details>
+<summary><strong>Can I use this app on the web?</strong></summary>
+Yes! Expo supports web. Run <code>npx expo start --web</code> to launch the app in your browser.
+</details>
+
+---
+
+## Acknowledgements
+
+- [React Native](https://reactnative.dev/)
+- [Expo](https://expo.dev/)
+- [MDN Web Docs](https://developer.mozilla.org/)
+- [CSS-Tricks](https://css-tricks.com/)
+- [JavaScript.info](https://javascript.info/)
+- [Shields.io](https://shields.io/) for badges
 
 ---
 
