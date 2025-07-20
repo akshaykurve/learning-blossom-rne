@@ -16,7 +16,8 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.akshaykurve.sample"
     },
     "web": {
       "bundler": "metro",
@@ -43,6 +44,7 @@
       "eas": {
         "projectId": "732e3a97-276c-4a7a-9d6b-bdb467c5caf6"
       }
-    }
+    },
+    "owner": "akshaykurve"
   }
 }
