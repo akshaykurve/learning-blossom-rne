@@ -3,7 +3,7 @@ import { Raleway_400Regular, Raleway_700Bold, useFonts as useRaleway } from '@ex
 import { FontAwesome5, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from "expo-router";
 import React from "react";
-import { Dimensions, Image, Modal, Platform, Animated as RNAnimated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Clipboard, Dimensions, Image, Modal, Platform, Animated as RNAnimated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Animated, { Easing, Extrapolate, FadeIn, FadeInUp, ZoomIn, interpolate, useAnimatedScrollHandler, useAnimatedStyle, useSharedValue, withRepeat, withSequence, withTiming } from "react-native-reanimated";
 
 const { width } = Dimensions.get("window");
@@ -70,6 +70,27 @@ const testimonials = [
     quote: "The code samples and try buttons make it so easy to experiment. Highly recommended!",
   },
 ];
+
+// Memoized Callout
+const Callout = React.memo(function Callout({ type, children }: { type: 'tip' | 'warning', children: React.ReactNode }) {
+  return (
+    <View style={[luxuryStyles.callout, type === 'tip' ? luxuryStyles.calloutTip : luxuryStyles.calloutWarning]}>
+      <Text style={luxuryStyles.calloutText}>{type === 'tip' ? '💡 Tip: ' : '⚠️ Warning: '}{children}</Text>
+    </View>
+  );
+});
+
+// Memoized CopyButton
+const CopyButton = React.memo(function CopyButton({ text }: { text: string }) {
+  const handleCopy = React.useCallback(() => {
+    Clipboard.setString(text);
+  }, [text]);
+  return (
+    <TouchableOpacity onPress={handleCopy} style={luxuryStyles.copyBtn} accessibilityLabel="Copy code to clipboard">
+      <Text style={luxuryStyles.copyBtnText}>Copy</Text>
+    </TouchableOpacity>
+  );
+});
 
 export default function Index() {
   const router = useRouter();
@@ -214,10 +235,23 @@ export default function Index() {
   const [showCssOutput, setShowCssOutput] = React.useState(false);
   const [showJsOutput, setShowJsOutput] = React.useState(false);
   const [jsAlert, setJsAlert] = React.useState('');
+  const [imageLoaded, setImageLoaded] = React.useState(false);
+  const techCardsMemo = React.useMemo(() => techCards, []);
+  const testimonialsMemo = React.useMemo(() => testimonials, []);
+
+  const handleHtmlTry = React.useCallback(() => setShowHtmlModal(true), []);
+  const handleCssTry = React.useCallback(() => setShowCssOutput(v => !v), []);
+  const handleJsTry = React.useCallback(() => setJsAlert('Hello!'), []);
 
   const [fontsLoaded] = useRaleway({ Raleway_400Regular, Raleway_700Bold });
   const [bodoniLoaded] = useBodoni({ BodoniModa_700Bold });
-  if (!fontsLoaded || !bodoniLoaded) return null;
+  if (!fontsLoaded || !bodoniLoaded) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: LUXURY.background }}>
+        <ActivityIndicator size="large" color={LUXURY.gold} />
+      </View>
+    );
+  }
 
   return (
     <Animated.ScrollView
@@ -247,6 +281,7 @@ export default function Index() {
               style={luxuryStyles.ctaButton} 
               disabled={displayedButton.length < buttonText.length}
               onPress={() => router.push('/html')}
+              accessibilityLabel="Get Started button"
             >
               <Text style={luxuryStyles.ctaText}>{displayedButton}</Text>
             </TouchableOpacity>
@@ -271,7 +306,7 @@ export default function Index() {
           }}
           scrollEventThrottle={16}
         >
-          {techCards.map((card, idx) => (
+          {techCardsMemo.map((card, idx) => (
             <Animated.View
               key={card.key}
               entering={FadeInUp.delay(200 * idx).duration(700)}
@@ -292,7 +327,7 @@ export default function Index() {
           ))}
         </ScrollView>
         <View style={luxuryStyles.carouselDots}>
-          {techCards.map((_, idx) => (
+          {techCardsMemo.map((_, idx) => (
             <View
               key={idx}
               style={[luxuryStyles.carouselDot, cardIndex === idx && luxuryStyles.carouselDotActive]}
@@ -311,20 +346,20 @@ export default function Index() {
             <View style={luxuryStyles.codeBox}>
               <Text style={[luxuryStyles.code, { color: '#000' }]}>{`<button>Click Me!</button>`}</Text>
             </View>
-            <TouchableOpacity style={[luxuryStyles.tryBtn, { backgroundColor: PALETTE.primary + 'cc' }]} onPress={() => setShowHtmlModal(true)}>
+            <TouchableOpacity style={[luxuryStyles.tryBtn, { backgroundColor: PALETTE.primary + 'cc' }]} onPress={handleHtmlTry} accessibilityLabel="Try HTML sample">
               <Text style={luxuryStyles.tryBtnText}>Try</Text>
             </TouchableOpacity>
-            <Modal visible={showHtmlModal} transparent animationType="slide" onRequestClose={() => setShowHtmlModal(false)}>
+            <Modal visible={showHtmlModal} transparent animationType="fade" onRequestClose={() => setShowHtmlModal(false)}>
               <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', justifyContent: 'center', alignItems: 'center' }}>
                 <View style={{ backgroundColor: '#fff', borderRadius: 16, padding: 24, alignItems: 'center', minWidth: 260 }}>
                   <Text style={{ fontWeight: 'bold', fontSize: 18, marginBottom: 12 }}>HTML Output</Text>
                   <View style={{ backgroundColor: '#f3f3f3', borderRadius: 8, padding: 16, marginBottom: 16 }}>
                     <Text style={{ fontSize: 16, textAlign: 'center' }}>[Button Rendered Here]</Text>
-                    <TouchableOpacity style={{ backgroundColor: PALETTE.primary, borderRadius: 8, padding: 10, marginTop: 10 }} onPress={() => setShowHtmlModal(false)}>
+                    <TouchableOpacity style={{ backgroundColor: PALETTE.primary, borderRadius: 8, padding: 10, marginTop: 10 }} onPress={() => setShowHtmlModal(false)} activeOpacity={0.7} accessibilityLabel="Close HTML output modal">
                       <Text style={{ color: '#fff', fontWeight: 'bold' }}>Click Me!</Text>
                     </TouchableOpacity>
                   </View>
-                  <TouchableOpacity onPress={() => setShowHtmlModal(false)}>
+                  <TouchableOpacity onPress={() => setShowHtmlModal(false)} activeOpacity={0.7} accessibilityLabel="Close HTML output modal">
                     <Text style={{ color: PALETTE.primary, fontWeight: 'bold' }}>Close</Text>
                   </TouchableOpacity>
                 </View>
@@ -334,10 +369,10 @@ export default function Index() {
           {/* CSS Sample */}
           <Animated.View entering={FadeInUp.delay(200).duration(700)} style={luxuryStyles.sampleCard}>
             <Text style={[luxuryStyles.sampleLabel, { color: PALETTE.accent }]}>CSS</Text>
-            <View style={luxuryStyles.codeBox}>
+              <View style={luxuryStyles.codeBox}>
               <Text style={[luxuryStyles.code, { color: '#000' }]}>{`button {\n  background: #61dafb;\n  border: none;\n  padding: 8px 16px;\n  border-radius: 6px;\n}`}</Text>
             </View>
-            <TouchableOpacity style={[luxuryStyles.tryBtn, { backgroundColor: PALETTE.accent + 'cc' }]} onPress={() => setShowCssOutput(v => !v)}>
+            <TouchableOpacity style={[luxuryStyles.tryBtn, { backgroundColor: PALETTE.accent + 'cc' }]} onPress={handleCssTry} accessibilityLabel="Try CSS sample">
               <Text style={luxuryStyles.tryBtnText}>Try</Text>
             </TouchableOpacity>
             {showCssOutput && (
@@ -355,9 +390,9 @@ export default function Index() {
             <View style={luxuryStyles.codeBox}>
               <Text style={[luxuryStyles.code, { color: '#000' }]}>{`document.querySelector('button').onclick = () => alert('Hello!');`}</Text>
             </View>
-            <TouchableOpacity style={[luxuryStyles.tryBtn, { backgroundColor: PALETTE.highlight + 'cc' }]} onPress={() => setJsAlert('Hello!')}>
-              <Text style={luxuryStyles.tryBtnText}>Try</Text>
-            </TouchableOpacity>
+            <TouchableOpacity style={[luxuryStyles.tryBtn, { backgroundColor: PALETTE.highlight + 'cc' }]} onPress={handleJsTry} accessibilityLabel="Try JavaScript sample">
+                <Text style={luxuryStyles.tryBtnText}>Try</Text>
+              </TouchableOpacity>
             {jsAlert !== '' && (
               <View style={{ marginTop: 12, alignItems: 'center' }}>
                 <Text style={{ fontWeight: 'bold', marginBottom: 6 }}>JS Output</Text>
@@ -369,7 +404,7 @@ export default function Index() {
                 </TouchableOpacity>
               </View>
             )}
-          </Animated.View>
+            </Animated.View>
         </View>
       </Animated.View>
 
@@ -391,7 +426,7 @@ export default function Index() {
           }}
           scrollEventThrottle={16}
         >
-          {testimonials.map((t, idx) => (
+          {testimonialsMemo.map((t, idx) => (
             <Animated.View
               key={t.name}
               entering={FadeInUp.delay(200 * idx).duration(700)}
@@ -404,14 +439,17 @@ export default function Index() {
                 },
               ]}
             >
-              <Image source={{ uri: t.avatar }} style={luxuryStyles.testimonialAvatar} />
+              <View style={{ width: 64, height: 64, borderRadius: 32, overflow: 'hidden', backgroundColor: '#eee', justifyContent: 'center', alignItems: 'center' }}>
+                {!imageLoaded && <ActivityIndicator size="small" color={PALETTE.primary} />}
+                <Image source={{ uri: t.avatar }} style={luxuryStyles.testimonialAvatar} onLoad={() => setImageLoaded(true)} />
+              </View>
               <Text style={luxuryStyles.testimonialQuote}>{`“${t.quote}”`}</Text>
               <Text style={luxuryStyles.testimonialName}>{t.name}</Text>
             </Animated.View>
           ))}
         </ScrollView>
         <View style={luxuryStyles.carouselDots}>
-          {testimonials.map((_, idx) => (
+          {testimonialsMemo.map((_, idx) => (
             <View
               key={idx}
               style={[luxuryStyles.carouselDot, testimonialIndex === idx && luxuryStyles.carouselDotActive]}
@@ -687,5 +725,41 @@ const luxuryStyles = StyleSheet.create({
     textAlign: "center",
     marginTop: 18,
     marginBottom: 8,
+  },
+  callout: {
+    backgroundColor: '#E9ECF5',
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 10,
+    width: '100%',
+    alignSelf: 'center',
+  },
+  calloutTip: {
+    backgroundColor: '#E9ECF5',
+  },
+  calloutWarning: {
+    backgroundColor: '#FFFBEB',
+  },
+  calloutText: {
+    fontSize: 14,
+    color: '#222',
+    fontFamily: Platform.OS === "ios" ? "Menlo" : "monospace",
+  },
+  copyBtn: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 10,
+    backgroundColor: '#E9ECF5',
+    alignSelf: 'center',
+    shadowColor: '#D1D5DB',
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    shadowOffset: { width: 0, height: 1 },
+    elevation: 1,
+  },
+  copyBtnText: {
+    color: '#222',
+    fontWeight: 'bold',
+    fontSize: 14,
   },
 });

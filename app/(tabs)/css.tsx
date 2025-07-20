@@ -1,7 +1,6 @@
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useRef, useState } from "react";
-import { Clipboard, Linking, Platform, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import Animated, { FadeInUp } from "react-native-reanimated";
+import { Clipboard, Linking, Platform, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+// Removed animation imports
 const PALETTE = {
   primary: '#6C63FF',
   accent: '#48B1F3',
@@ -23,21 +22,26 @@ const LUXURY = {
   shadow: 'rgba(212,175,55,0.10)',
 };
 
-function Callout({ type, children }: { type: 'tip' | 'warning', children: React.ReactNode }) {
+// Memoized Callout
+const Callout = React.memo(function Callout({ type, children }: { type: 'tip' | 'warning', children: React.ReactNode }) {
   return (
     <View style={[styles.callout, type === 'tip' ? styles.calloutTip : styles.calloutWarning]}>
       <Text style={styles.calloutText}>{type === 'tip' ? '💡 Tip: ' : '⚠️ Warning: '}{children}</Text>
     </View>
   );
-}
+});
 
-function CopyButton({ text }: { text: string }) {
+// Memoized CopyButton
+const CopyButton = React.memo(function CopyButton({ text }: { text: string }) {
+  const handleCopy = React.useCallback(() => {
+    Clipboard.setString(text);
+  }, [text]);
   return (
-    <Pressable onPress={() => Clipboard.setString(text)} style={styles.copyBtn}>
+    <TouchableOpacity onPress={handleCopy} style={styles.copyBtn} accessibilityLabel="Copy code to clipboard">
       <Text style={styles.copyBtnText}>Copy</Text>
-    </Pressable>
+    </TouchableOpacity>
   );
-}
+});
 
 export default function CSSScreen() {
   const scrollRef = useRef(null);
@@ -70,35 +74,36 @@ export default function CSSScreen() {
     const position = sectionPositions[key];
     if (position !== undefined && scrollRef.current) {
       (scrollRef.current as any).scrollTo({ y: position - 100, animated: true });
-    }
+        }
   };
 
-  const openLink = (url: string) => Linking.openURL(url);
+  const openLink = React.useCallback((url: string) => {
+    Linking.openURL(url);
+  }, []);
   
   return (
     <ScrollView ref={scrollRef} style={{ backgroundColor: LUXURY.background }} contentContainerStyle={styles.container}>
       {/* Hero Section */}
-      <Animated.View entering={FadeInUp.duration(700)} style={[styles.sectionCard, { marginTop: 12 }]}>
-        <MaterialCommunityIcons name="language-css3" size={60} color={LUXURY.gold} style={{ marginBottom: 16 }} />
+      <View style={[styles.sectionCard, { marginTop: 12 }]}>
+        {/* MaterialCommunityIcons removed as per new_code */}
         <Text style={styles.heroTitle}>CSS Documentation</Text>
         <Text style={styles.heroSubtitle}>
           The official, comprehensive guide to <Text style={{ color: LUXURY.gold, fontWeight: 'bold' }}>CSS</Text> — the language for styling web pages.
         </Text>
-      </Animated.View>
+      </View>
 
       {/* Table of Contents */}
-      <Animated.View entering={FadeInUp.delay(200).duration(700)} style={[styles.sectionCard, { marginBottom: 32 }]}> 
+      <View style={[styles.sectionCard, { marginBottom: 32 }]}> 
         <Text style={styles.sectionTitle}>Table of Contents</Text>
         {toc.map((item) => (
-          <Pressable key={item.key} onPress={() => scrollToSection(item.key)}>
+          <Pressable key={item.key} onPress={() => scrollToSection(item.key)} accessibilityLabel={`Go to ${item.label} section`}>
             <Text style={[styles.tocItem, { color: PALETTE.primary }]}>• {item.label}</Text>
           </Pressable>
         ))}
-      </Animated.View>
+      </View>
 
       {/* Introduction */}
-      <Animated.View 
-        entering={FadeInUp.delay(400).duration(700)} 
+      <View 
         style={styles.sectionCard}
         onLayout={(event) => measureSection('Introduction', event)}
       >
@@ -107,11 +112,10 @@ export default function CSSScreen() {
           CSS (Cascading Style Sheets) is the language used to describe the presentation of HTML or XML documents. CSS controls layout, colors, fonts, spacing, and much more.
         </Text>
         <Callout type="tip">CSS is supported by all modern browsers and is essential for responsive, accessible, and visually appealing web design.</Callout>
-      </Animated.View>
+      </View>
 
       {/* Syntax & Structure */}
-      <Animated.View 
-        entering={FadeInUp.delay(600).duration(700)} 
+      <View 
         style={styles.sectionCard}
         onLayout={(event) => measureSection('Syntax & Structure', event)}
       >
@@ -128,11 +132,10 @@ export default function CSSScreen() {
 }`} />
         </View>
         <Callout type="tip">Use consistent indentation and spacing for readability.</Callout>
-      </Animated.View>
+      </View>
 
       {/* Selectors */}
-      <Animated.View 
-        entering={FadeInUp.delay(800).duration(700)} 
+      <View 
         style={styles.sectionCard}
         onLayout={(event) => measureSection('Selectors', event)}
       >
@@ -167,11 +170,10 @@ a:hover { color: red; }
 p::first-line { font-weight: bold; }`} />
         </View>
         <Callout type="tip">Use class selectors for reusable styles and avoid overusing ID selectors.</Callout>
-      </Animated.View>
+      </View>
 
       {/* Specificity & Cascade */}
-      <Animated.View 
-        entering={FadeInUp.delay(1000).duration(700)} 
+      <View 
         style={styles.sectionCard}
         onLayout={(event) => measureSection('Specificity & Cascade', event)}
       >
@@ -190,11 +192,10 @@ p { color: green; }     /* specificity: 1 */`}</Text>
 p { color: green; }     /* specificity: 1 */`} />
         </View>
         <Callout type="tip">Use browser DevTools to inspect and debug specificity issues.</Callout>
-      </Animated.View>
+      </View>
 
       {/* Box Model */}
-      <Animated.View 
-        entering={FadeInUp.delay(1200).duration(700)} 
+      <View 
         style={styles.sectionCard}
         onLayout={(event) => measureSection('Box Model', event)}
       >
@@ -217,11 +218,10 @@ p { color: green; }     /* specificity: 1 */`} />
 }`} />
         </View>
         <Callout type="tip">Use <Text style={{ color: PALETTE.primary }}>box-sizing: border-box</Text> to include padding and border in element width.</Callout>
-      </Animated.View>
+      </View>
 
       {/* Layout */}
-      <Animated.View 
-        entering={FadeInUp.delay(1400).duration(700)} 
+      <View 
         style={styles.sectionCard}
         onLayout={(event) => measureSection('Layout: Block, Inline, Position', event)}
       >
@@ -252,11 +252,10 @@ p { color: green; }     /* specificity: 1 */`} />
 .sticky { position: sticky; }`} />
         </View>
         <Callout type="tip">Use <Text style={{ color: PALETTE.primary }}>position: relative</Text> on parent and <Text style={{ color: PALETTE.primary }}>position: absolute</Text> on child for precise positioning.</Callout>
-      </Animated.View>
+      </View>
 
       {/* Flexbox */}
-      <Animated.View 
-        entering={FadeInUp.delay(1600).duration(700)} 
+      <View 
         style={styles.sectionCard}
         onLayout={(event) => measureSection('Flexbox', event)}
       >
@@ -289,11 +288,10 @@ p { color: green; }     /* specificity: 1 */`} />
 }`} />
         </View>
         <Callout type="tip">Use <Text style={{ color: PALETTE.primary }}>justify-content</Text> for main axis alignment and <Text style={{ color: PALETTE.primary }}>align-items</Text> for cross axis alignment.</Callout>
-      </Animated.View>
+      </View>
 
       {/* CSS Grid */}
-      <Animated.View 
-        entering={FadeInUp.delay(1800).duration(700)} 
+      <View 
         style={styles.sectionCard}
         onLayout={(event) => measureSection('CSS Grid', event)}
       >
@@ -326,11 +324,10 @@ p { color: green; }     /* specificity: 1 */`} />
 }`} />
         </View>
         <Callout type="tip">Use <Text style={{ color: PALETTE.primary }}>fr</Text> units for flexible grid tracks and <Text style={{ color: PALETTE.primary }}>gap</Text> for spacing between grid items.</Callout>
-      </Animated.View>
+      </View>
 
       {/* Custom Properties */}
-      <Animated.View 
-        entering={FadeInUp.delay(2000).duration(700)} 
+      <View 
         style={styles.sectionCard}
         onLayout={(event) => measureSection('Custom Properties (Variables)', event)}
       >
@@ -361,11 +358,10 @@ p { color: green; }     /* specificity: 1 */`} />
 }`} />
         </View>
         <Callout type="tip">Use custom properties for consistent theming and easier maintenance across your project.</Callout>
-      </Animated.View>
+      </View>
 
       {/* Transitions & Animations */}
-      <Animated.View 
-        entering={FadeInUp.delay(2200).duration(700)} 
+      <View 
         style={styles.sectionCard}
         onLayout={(event) => measureSection('Transitions & Animations', event)}
       >
@@ -404,11 +400,10 @@ p { color: green; }     /* specificity: 1 */`} />
 }`} />
         </View>
         <Callout type="tip">Use <Text style={{ color: PALETTE.primary }}>transition</Text> for simple state changes and <Text style={{ color: PALETTE.primary }}>@keyframes</Text> for complex animations.</Callout>
-      </Animated.View>
+      </View>
 
       {/* Responsive Design */}
-      <Animated.View 
-        entering={FadeInUp.delay(2400).duration(700)} 
+      <View 
         style={styles.sectionCard}
         onLayout={(event) => measureSection('Responsive Design', event)}
       >
@@ -459,11 +454,10 @@ p { color: green; }     /* specificity: 1 */`} />
 }`} />
         </View>
         <Callout type="tip">Start with mobile styles and use <Text style={{ color: PALETTE.primary }}>min-width</Text> media queries to progressively enhance for larger screens.</Callout>
-      </Animated.View>
+      </View>
 
       {/* Preprocessors & PostCSS */}
-      <Animated.View 
-        entering={FadeInUp.delay(2600).duration(700)} 
+      <View 
         style={styles.sectionCard}
         onLayout={(event) => measureSection('Preprocessors & PostCSS', event)}
       >
@@ -502,11 +496,10 @@ $primary-color: #6C63FF;
 }`} />
         </View>
         <Callout type="tip">Use preprocessors for better organization and maintainability, but be mindful of over-nesting.</Callout>
-      </Animated.View>
+      </View>
 
       {/* Browser Support & Prefixes */}
-      <Animated.View 
-        entering={FadeInUp.delay(2800).duration(700)} 
+      <View 
         style={styles.sectionCard}
         onLayout={(event) => measureSection('Browser Support & Prefixes', event)}
       >
@@ -539,11 +532,10 @@ $primary-color: #6C63FF;
 }`} />
         </View>
         <Callout type="tip">Use tools like Autoprefixer to automatically add vendor prefixes based on your browser support requirements.</Callout>
-      </Animated.View>
+      </View>
 
       {/* Best Practices */}
-      <Animated.View 
-        entering={FadeInUp.delay(3000).duration(700)} 
+      <View 
         style={styles.sectionCard}
         onLayout={(event) => measureSection('Best Practices', event)}
       >
@@ -594,11 +586,10 @@ $primary-color: #6C63FF;
 .header { }`} />
         </View>
         <Callout type="tip">Use a consistent naming convention like BEM (Block, Element, Modifier) for better code organization.</Callout>
-      </Animated.View>
+      </View>
 
       {/* Resources */}
-      <Animated.View 
-        entering={FadeInUp.delay(3200).duration(700)} 
+      <View 
         style={styles.sectionCard}
         onLayout={(event) => measureSection('References', event)}
       >
@@ -607,24 +598,24 @@ $primary-color: #6C63FF;
           Here are some valuable resources for learning more about CSS:
         </Text>
         <View style={{ marginTop: 8 }}>
-          <Pressable onPress={() => openLink('https://developer.mozilla.org/en-US/docs/Web/CSS')}>
+          <Pressable onPress={() => openLink('https://developer.mozilla.org/en-US/docs/Web/CSS')} accessibilityLabel="Visit MDN Web Docs - CSS">
             <Text style={[styles.sectionText, { color: PALETTE.primary, textDecorationLine: 'underline' }]}>
               • MDN Web Docs - CSS
-            </Text>
+        </Text>
           </Pressable>
-          <Pressable onPress={() => openLink('https://css-tricks.com/')}>
+          <Pressable onPress={() => openLink('https://css-tricks.com/')} accessibilityLabel="Visit CSS-Tricks">
             <Text style={[styles.sectionText, { color: PALETTE.primary, textDecorationLine: 'underline' }]}>
               • CSS-Tricks
-            </Text>
+        </Text>
           </Pressable>
-          <Pressable onPress={() => openLink('https://caniuse.com/')}>
+          <Pressable onPress={() => openLink('https://caniuse.com/')} accessibilityLabel="Visit Can I Use - Browser Support">
             <Text style={[styles.sectionText, { color: PALETTE.primary, textDecorationLine: 'underline' }]}>
               • Can I Use - Browser Support
-            </Text>
-          </Pressable>
+        </Text>
+        </Pressable>
         </View>
         <Callout type="tip">Bookmark these resources for quick reference while developing CSS styles.</Callout>
-      </Animated.View>
+      </View>
     </ScrollView>
   );
 }

@@ -1,7 +1,7 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useRef, useState } from "react";
-import { Clipboard, Linking, Platform, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import Animated, { FadeInUp } from "react-native-reanimated";
+import { Clipboard, Linking, Platform, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+// Removed animation imports
 const PALETTE = {
   primary: '#6C63FF',
   accent: '#48B1F3',
@@ -23,21 +23,26 @@ const LUXURY = {
   shadow: 'rgba(212,175,55,0.10)',
 };
 
-function Callout({ type, children }: { type: 'tip' | 'warning', children: React.ReactNode }) {
+// Memoized Callout
+const Callout = React.memo(function Callout({ type, children }: { type: 'tip' | 'warning', children: React.ReactNode }) {
   return (
     <View style={[styles.callout, type === 'tip' ? styles.calloutTip : styles.calloutWarning]}>
       <Text style={styles.calloutText}>{type === 'tip' ? '💡 Tip: ' : '⚠️ Warning: '}{children}</Text>
     </View>
   );
-}
+});
 
-function CopyButton({ text }: { text: string }) {
+// Memoized CopyButton
+const CopyButton = React.memo(function CopyButton({ text }: { text: string }) {
+  const handleCopy = React.useCallback(() => {
+    Clipboard.setString(text);
+  }, [text]);
   return (
-    <Pressable onPress={() => Clipboard.setString(text)} style={styles.copyBtn}>
+    <TouchableOpacity onPress={handleCopy} style={styles.copyBtn} accessibilityLabel="Copy code to clipboard">
       <Text style={styles.copyBtnText}>Copy</Text>
-    </Pressable>
+    </TouchableOpacity>
   );
-}
+});
 
 export default function JSScreen() {
   const scrollRef = useRef(null);
@@ -72,37 +77,38 @@ export default function JSScreen() {
     const position = sectionPositions[key];
     if (position !== undefined && scrollRef.current) {
       (scrollRef.current as any).scrollTo({ y: position - 100, animated: true });
-    }
+        }
   };
 
-  const openLink = (url: string) => Linking.openURL(url);
+  const openLink = React.useCallback((url: string) => {
+    Linking.openURL(url);
+  }, []);
   
   return (
     <ScrollView ref={scrollRef} style={{ backgroundColor: LUXURY.background }} contentContainerStyle={styles.container}>
       {/* Hero Section */}
-      <Animated.View entering={FadeInUp.duration(700)} style={[styles.sectionCard, { marginTop: 12 }]}>
+      <View style={[styles.sectionCard, { marginTop: 12 }]}>
         <MaterialCommunityIcons name="language-javascript" size={60} color={LUXURY.gold} style={{ marginBottom: 16 }} />
         <Text style={styles.heroTitle}>JavaScript Documentation</Text>
         <Text style={styles.heroSubtitle}>
           The official, comprehensive guide to <Text style={{ color: LUXURY.gold, fontWeight: 'bold' }}>JavaScript</Text> — the programming language of the web.
         </Text>
-      </Animated.View>
+      </View>
 
       {/* Table of Contents */}
-      <Animated.View entering={FadeInUp.delay(200).duration(700)} style={[styles.sectionCard, { marginBottom: 32 }]}>
+      <View style={[styles.sectionCard, { marginBottom: 32 }]}>
         <Text style={styles.sectionTitle}>Table of Contents</Text>
         {toc.map((item) => (
-          <Pressable key={item.key} onPress={() => scrollToSection(item.key)}>
+          <Pressable key={item.key} onPress={() => scrollToSection(item.key)} accessibilityLabel={`Go to ${item.label} section`}>
             <Text style={[styles.tocItem, { color: PALETTE.primary }]}>
               • {item.label}
             </Text>
           </Pressable>
         ))}
-      </Animated.View>
+      </View>
 
       {/* Introduction */}
-      <Animated.View 
-        entering={FadeInUp.delay(400).duration(700)} 
+      <View 
         style={styles.sectionCard}
         onLayout={(event) => measureSection('Introduction', event)}
       >
@@ -114,11 +120,10 @@ export default function JSScreen() {
           JavaScript was originally created to make web pages interactive, but it has grown to become one of the most popular programming languages in the world, used for both frontend and backend development.
         </Text>
         <Callout type="tip">JavaScript is the only programming language that runs natively in web browsers, making it essential for web development.</Callout>
-      </Animated.View>
+      </View>
 
       {/* Syntax & Structure */}
-      <Animated.View 
-        entering={FadeInUp.delay(600).duration(700)} 
+      <View 
         style={styles.sectionCard}
         onLayout={(event) => measureSection('Syntax & Structure', event)}
       >
@@ -163,11 +168,10 @@ const user = {
 };`} />
         </View>
         <Callout type="tip">Use <Text style={{ color: PALETTE.primary }}>const</Text> by default, <Text style={{ color: PALETTE.primary }}>let</Text> when you need to reassign, and avoid <Text style={{ color: PALETTE.primary }}>var</Text>.</Callout>
-      </Animated.View>
+      </View>
 
       {/* Types & Type Coercion */}
-      <Animated.View 
-        entering={FadeInUp.delay(800).duration(700)} 
+      <View 
         style={styles.sectionCard}
         onLayout={(event) => measureSection('Types & Type Coercion', event)}
       >
@@ -204,11 +208,10 @@ console.log("5" - 3);     // 2 (numeric subtraction)
 console.log(true + 1);    // 2 (boolean to number)`} />
         </View>
         <Callout type="tip">Use <Text style={{ color: PALETTE.primary }}>===</Text> for strict equality comparison to avoid unexpected type coercion.</Callout>
-      </Animated.View>
+        </View>
 
       {/* Variables & Scope */}
-      <Animated.View 
-        entering={FadeInUp.delay(1000).duration(700)} 
+      <View 
         style={styles.sectionCard}
         onLayout={(event) => measureSection('Variables & Scope', event)}
       >
@@ -231,7 +234,7 @@ function example() {
   }
   
   // console.log(blockVar); // Error: blockVar is not defined
-}
+  }
 
 // Hoisting (var only)
 console.log(hoistedVar); // undefined (not error)
@@ -257,11 +260,10 @@ console.log(hoistedVar); // undefined (not error)
 var hoistedVar = "I'm hoisted";`} />
         </View>
         <Callout type="tip">Use <Text style={{ color: PALETTE.primary }}>const</Text> for values that won&apos;t be reassigned, <Text style={{ color: PALETTE.primary }}>let</Text> for values that will change, and avoid <Text style={{ color: PALETTE.primary }}>var</Text>.</Callout>
-      </Animated.View>
+        </View>
 
       {/* Operators & Expressions */}
-      <Animated.View 
-        entering={FadeInUp.delay(1200).duration(700)} 
+      <View 
         style={styles.sectionCard}
         onLayout={(event) => measureSection('Operators & Expressions', event)}
       >
@@ -320,11 +322,10 @@ x += 3; // Same as x = x + 3
 console.log(x); // 8`} />
         </View>
         <Callout type="tip">Always use <Text style={{ color: PALETTE.primary }}>===</Text> and <Text style={{ color: PALETTE.primary }}>!==</Text> for comparisons to avoid unexpected type coercion.</Callout>
-      </Animated.View>
+      </View>
 
       {/* Control Flow */}
-      <Animated.View 
-        entering={FadeInUp.delay(1400).duration(700)} 
+      <View 
         style={styles.sectionCard}
         onLayout={(event) => measureSection('Control Flow', event)}
       >
@@ -399,11 +400,10 @@ for (let fruit of fruits) {
 }`} />
         </View>
         <Callout type="tip">Use <Text style={{ color: PALETTE.primary }}>for...of</Text> for arrays and <Text style={{ color: PALETTE.primary }}>for...in</Text> for object properties.</Callout>
-      </Animated.View>
+      </View>
 
       {/* Functions & Closures */}
-      <Animated.View 
-        entering={FadeInUp.delay(1600).duration(700)} 
+      <View 
         style={styles.sectionCard}
         onLayout={(event) => measureSection('Functions & Closures', event)}
       >
@@ -462,11 +462,10 @@ console.log(counter()); // 1
 console.log(counter()); // 2`} />
         </View>
         <Callout type="tip">Arrow functions don&apos;t have their own <Text style={{ color: PALETTE.primary }}>this</Text> binding, making them useful for callbacks and methods.</Callout>
-      </Animated.View>
+      </View>
 
       {/* Objects & Prototypes */}
-      <Animated.View 
-        entering={FadeInUp.delay(1800).duration(700)} 
+      <View 
         style={styles.sectionCard}
         onLayout={(event) => measureSection('Objects & Prototypes', event)}
       >
@@ -537,11 +536,10 @@ class PersonClass {
 }`} />
         </View>
         <Callout type="tip">Use classes for cleaner object-oriented code, but remember they&apos;re syntactic sugar over prototypes.</Callout>
-      </Animated.View>
+      </View>
 
       {/* Arrays & Iteration */}
-      <Animated.View 
-        entering={FadeInUp.delay(2000).duration(700)} 
+      <View 
         style={styles.sectionCard}
         onLayout={(event) => measureSection('Arrays & Iteration', event)}
       >
@@ -590,11 +588,10 @@ console.log(rest);  // [3, 4, 5]
 const newArray = [...numbers, 6, 7];`} />
         </View>
         <Callout type="tip">Use <Text style={{ color: PALETTE.primary }}>map</Text>, <Text style={{ color: PALETTE.primary }}>filter</Text>, and <Text style={{ color: PALETTE.primary }}>reduce</Text> for functional programming patterns.</Callout>
-      </Animated.View>
+        </View>
 
       {/* DOM & Events */}
-      <Animated.View 
-        entering={FadeInUp.delay(2200).duration(700)} 
+      <View 
         style={styles.sectionCard}
         onLayout={(event) => measureSection('DOM & Events', event)}
       >
@@ -649,11 +646,10 @@ document.addEventListener("click", (event) => {
 });`} />
         </View>
         <Callout type="tip">Use event delegation for dynamically created elements and to improve performance with many event listeners.</Callout>
-      </Animated.View>
+      </View>
 
       {/* ES6+ Features */}
-      <Animated.View 
-        entering={FadeInUp.delay(2400).duration(700)} 
+      <View 
         style={styles.sectionCard}
         onLayout={(event) => measureSection('ES6+ Features', event)}
       >
@@ -726,11 +722,10 @@ class Animal {
 }`} />
         </View>
         <Callout type="tip">Use modern ES6+ features for cleaner, more readable code, but ensure browser compatibility or use a transpiler like Babel.</Callout>
-      </Animated.View>
+      </View>
 
       {/* Async JavaScript */}
-      <Animated.View 
-        entering={FadeInUp.delay(2600).duration(700)} 
+      <View 
         style={styles.sectionCard}
         onLayout={(event) => measureSection('Async JavaScript', event)}
       >
@@ -807,11 +802,10 @@ async function fetchDataAsync() {
 }`} />
         </View>
         <Callout type="tip">Use async/await for cleaner asynchronous code, but remember to handle errors with try/catch blocks.</Callout>
-      </Animated.View>
+      </View>
 
       {/* OOP & Classes */}
-      <Animated.View 
-        entering={FadeInUp.delay(2800).duration(700)} 
+      <View 
         style={styles.sectionCard}
         onLayout={(event) => measureSection('OOP & Classes', event)}
       >
@@ -900,11 +894,10 @@ class BankAccount {
 }`} />
         </View>
         <Callout type="tip">Use private fields (#) for better encapsulation and to prevent external access to internal state.</Callout>
-      </Animated.View>
+      </View>
 
       {/* Patterns & Modules */}
-      <Animated.View 
-        entering={FadeInUp.delay(3000).duration(700)} 
+      <View 
         style={styles.sectionCard}
         onLayout={(event) => measureSection('Patterns & Modules', event)}
       >
@@ -973,11 +966,10 @@ class Database {
 }`} />
         </View>
         <Callout type="tip">Use ES6 modules for better code organization and to avoid global namespace pollution.</Callout>
-      </Animated.View>
+        </View>
 
       {/* Error Handling */}
-      <Animated.View 
-        entering={FadeInUp.delay(3200).duration(700)} 
+      <View 
         style={styles.sectionCard}
         onLayout={(event) => measureSection('Error Handling', event)}
       >
@@ -1062,11 +1054,10 @@ async function handleData() {
 }`} />
         </View>
         <Callout type="tip">Always handle errors gracefully and provide meaningful error messages to users.</Callout>
-      </Animated.View>
+      </View>
 
       {/* Best Practices */}
-      <Animated.View 
-        entering={FadeInUp.delay(3400).duration(700)} 
+      <View 
         style={styles.sectionCard}
         onLayout={(event) => measureSection('Best Practices', event)}
       >
@@ -1129,11 +1120,10 @@ try {
 }`} />
         </View>
         <Callout type="tip">Use ESLint and Prettier to maintain consistent code style and catch potential issues early.</Callout>
-      </Animated.View>
+      </View>
 
       {/* Resources */}
-      <Animated.View 
-        entering={FadeInUp.delay(3600).duration(700)} 
+      <View 
         style={styles.sectionCard}
         onLayout={(event) => measureSection('References', event)}
       >
@@ -1142,24 +1132,24 @@ try {
           Here are some valuable resources for learning more about JavaScript:
         </Text>
         <View style={{ marginTop: 8 }}>
-          <Pressable onPress={() => openLink('https://developer.mozilla.org/en-US/docs/Web/JavaScript')}>
+          <Pressable onPress={() => openLink('https://developer.mozilla.org/en-US/docs/Web/JavaScript')} accessibilityLabel="Visit MDN Web Docs - JavaScript">
             <Text style={[styles.sectionText, { color: PALETTE.primary, textDecorationLine: 'underline' }]}>
               • MDN Web Docs - JavaScript
             </Text>
-          </Pressable>
-          <Pressable onPress={() => openLink('https://javascript.info/')}>
+        </Pressable>
+          <Pressable onPress={() => openLink('https://javascript.info/')} accessibilityLabel="Visit JavaScript.info - Modern JavaScript Tutorial">
             <Text style={[styles.sectionText, { color: PALETTE.primary, textDecorationLine: 'underline' }]}>
               • JavaScript.info - Modern JavaScript Tutorial
             </Text>
-          </Pressable>
-          <Pressable onPress={() => openLink('https://tc39.es/ecma262/')}>
+        </Pressable>
+          <Pressable onPress={() => openLink('https://tc39.es/ecma262/')} accessibilityLabel="Visit ECMAScript Specification">
             <Text style={[styles.sectionText, { color: PALETTE.primary, textDecorationLine: 'underline' }]}>
               • ECMAScript Specification
             </Text>
-          </Pressable>
+        </Pressable>
         </View>
         <Callout type="tip">Bookmark these resources for quick reference while developing JavaScript applications.</Callout>
-      </Animated.View>
+      </View>
     </ScrollView>
   );
 }
