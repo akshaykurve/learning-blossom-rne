@@ -31,6 +31,7 @@ function Callout({ type, children }: { type: 'tip' | 'warning', children: React.
     </View>
   );
 }
+
 function CopyButton({ text }: { text: string }) {
   return (
     <Pressable onPress={() => Clipboard.setString(text)} style={styles.copyBtn}>
@@ -41,62 +42,46 @@ function CopyButton({ text }: { text: string }) {
 
 export default function CSSScreen() {
   const scrollRef = useRef(null);
-  const sectionRefs = {
-    intro: useRef(null),
-    syntax: useRef(null),
-    selectors: useRef(null),
-    specificity: useRef(null),
-    box: useRef(null),
-    layout: useRef(null),
-    flex: useRef(null),
-    grid: useRef(null),
-    variables: useRef(null),
-    animation: useRef(null),
-    responsive: useRef(null),
-    preprocess: useRef(null),
-    browser: useRef(null),
-    best: useRef(null),
-    resources: useRef(null),
-  };
-  const toc: { key: keyof typeof sectionRefs; label: string }[] = [
-    { key: 'intro', label: 'Introduction' },
-    { key: 'syntax', label: 'Syntax & Structure' },
-    { key: 'selectors', label: 'Selectors' },
-    { key: 'specificity', label: 'Specificity & Cascade' },
-    { key: 'box', label: 'Box Model' },
-    { key: 'layout', label: 'Layout: Block, Inline, Position' },
-    { key: 'flex', label: 'Flexbox' },
-    { key: 'grid', label: 'CSS Grid' },
-    { key: 'variables', label: 'Custom Properties (Variables)' },
-    { key: 'animation', label: 'Transitions & Animations' },
-    { key: 'responsive', label: 'Responsive Design' },
-    { key: 'preprocess', label: 'Preprocessors & PostCSS' },
-    { key: 'browser', label: 'Browser Support & Prefixes' },
-    { key: 'best', label: 'Best Practices' },
-    { key: 'resources', label: 'References' },
+
+  const toc: { key: string; label: string }[] = [
+    { key: 'Introduction', label: 'Introduction' },
+    { key: 'Syntax & Structure', label: 'Syntax & Structure' },
+    { key: 'Selectors', label: 'Selectors' },
+    { key: 'Specificity & Cascade', label: 'Specificity & Cascade' },
+    { key: 'Box Model', label: 'Box Model' },
+    { key: 'Layout: Block, Inline, Position', label: 'Layout: Block, Inline, Position' },
+    { key: 'Flexbox', label: 'Flexbox' },
+    { key: 'CSS Grid', label: 'CSS Grid' },
+    { key: 'Custom Properties (Variables)', label: 'Custom Properties (Variables)' },
+    { key: 'Transitions & Animations', label: 'Transitions & Animations' },
+    { key: 'Responsive Design', label: 'Responsive Design' },
+    { key: 'Preprocessors & PostCSS', label: 'Preprocessors & PostCSS' },
+    { key: 'Browser Support & Prefixes', label: 'Browser Support & Prefixes' },
+    { key: 'Best Practices', label: 'Best Practices' },
+    { key: 'References', label: 'References' },
   ];
+
   const openLink = (url: string) => Linking.openURL(url);
-  const scrollToSection = (key: keyof typeof sectionRefs) => {
-    const ref = sectionRefs[key]?.current;
-    if (ref && scrollRef.current) {
-      (ref as any).measureLayout(
-        (scrollRef.current as any).getInnerViewNode(),
-        (x: number, y: number) => {
-          (scrollRef.current as any).scrollTo({ y: y - 20, animated: true });
-        }
-      );
+  
+  const scrollToSection = (key: string) => {
+    const sectionIndex = toc.findIndex(item => item.key === key);
+    if (sectionIndex !== -1 && scrollRef.current) {
+      const estimatedY = sectionIndex * 400; // Approximate section height
+      (scrollRef.current as any).scrollTo({ y: estimatedY, animated: true });
     }
   };
+
   return (
     <ScrollView ref={scrollRef} style={{ backgroundColor: LUXURY.background }} contentContainerStyle={styles.container}>
       {/* Hero Section */}
-      <Animated.View entering={FadeInUp.duration(700)} style={[styles.sectionCard, { marginTop: 12 }]} ref={sectionRefs.intro}>
+      <Animated.View entering={FadeInUp.duration(700)} style={[styles.sectionCard, { marginTop: 12 }]}>
         <MaterialCommunityIcons name="language-css3" size={60} color={LUXURY.gold} style={{ marginBottom: 16 }} />
         <Text style={styles.heroTitle}>CSS Documentation</Text>
         <Text style={styles.heroSubtitle}>
           The official, comprehensive guide to <Text style={{ color: LUXURY.gold, fontWeight: 'bold' }}>CSS</Text> — the language for styling web pages.
         </Text>
       </Animated.View>
+
       {/* Table of Contents */}
       <Animated.View entering={FadeInUp.delay(200).duration(700)} style={[styles.sectionCard, { marginBottom: 32 }]}> 
         <Text style={styles.sectionTitle}>Table of Contents</Text>
@@ -106,16 +91,18 @@ export default function CSSScreen() {
           </Pressable>
         ))}
       </Animated.View>
+
       {/* Introduction */}
-      <Animated.View entering={FadeInUp.delay(400).duration(700)} style={styles.sectionCard} ref={sectionRefs.intro}>
+      <Animated.View entering={FadeInUp.delay(400).duration(700)} style={styles.sectionCard}>
         <Text style={styles.sectionTitle}>Introduction</Text>
         <Text style={styles.sectionText}>
           CSS (Cascading Style Sheets) is the language used to describe the presentation of HTML or XML documents. CSS controls layout, colors, fonts, spacing, and much more.
         </Text>
         <Callout type="tip">CSS is supported by all modern browsers and is essential for responsive, accessible, and visually appealing web design.</Callout>
       </Animated.View>
+
       {/* Syntax & Structure */}
-      <Animated.View entering={FadeInUp.delay(600).duration(700)} style={styles.sectionCard} ref={sectionRefs.syntax}>
+      <Animated.View entering={FadeInUp.delay(600).duration(700)} style={styles.sectionCard}>
         <Text style={styles.sectionTitle}>Syntax & Structure</Text>
         <Text style={styles.sectionText}>
           CSS consists of selectors and declaration blocks. Each declaration includes a property and a value, separated by a colon and ended with a semicolon.
@@ -130,8 +117,9 @@ export default function CSSScreen() {
         </View>
         <Callout type="tip">Use consistent indentation and spacing for readability.</Callout>
       </Animated.View>
+
       {/* Selectors */}
-      <Animated.View entering={FadeInUp.delay(800).duration(700)} style={styles.sectionCard} ref={sectionRefs.selectors}>
+      <Animated.View entering={FadeInUp.delay(800).duration(700)} style={styles.sectionCard}>
         <Text style={styles.sectionTitle}>Selectors</Text>
         <Text style={styles.sectionText}>
           Selectors target HTML elements to apply styles. Types include element, class, ID, attribute, pseudo-class, and pseudo-element selectors.
@@ -164,8 +152,9 @@ p::first-line { font-weight: bold; }`} />
         </View>
         <Callout type="tip">Use class selectors for reusable styles and avoid overusing ID selectors.</Callout>
       </Animated.View>
+
       {/* Specificity & Cascade */}
-      <Animated.View entering={FadeInUp.delay(1000).duration(700)} style={styles.sectionCard} ref={sectionRefs.specificity}>
+      <Animated.View entering={FadeInUp.delay(1000).duration(700)} style={styles.sectionCard}>
         <Text style={styles.sectionTitle}>Specificity & Cascade</Text>
         <Text style={styles.sectionText}>
           Specificity determines which CSS rule applies if multiple rules match the same element. The cascade is the order in which rules are applied.
@@ -182,8 +171,9 @@ p { color: green; }     /* specificity: 1 */`} />
         </View>
         <Callout type="tip">Use browser DevTools to inspect and debug specificity issues.</Callout>
       </Animated.View>
+
       {/* Box Model */}
-      <Animated.View entering={FadeInUp.delay(1200).duration(700)} style={styles.sectionCard} ref={sectionRefs.box}>
+      <Animated.View entering={FadeInUp.delay(1200).duration(700)} style={styles.sectionCard}>
         <Text style={styles.sectionTitle}>Box Model</Text>
         <Text style={styles.sectionText}>
           Every element is a rectangular box. The box model consists of content, padding, border, and margin.
@@ -202,200 +192,374 @@ p { color: green; }     /* specificity: 1 */`} />
   margin: 20px;
 }`} />
         </View>
-        <Callout type="tip">Use <Text style={{ color: PALETTE.primary }}>box-sizing: border-box</Text> to include padding and border in the element{"'"}s total width and height.</Callout>
+        <Callout type="tip">Use <Text style={{ color: PALETTE.primary }}>box-sizing: border-box</Text> to include padding and border in element width.</Callout>
       </Animated.View>
-      {/* Layout: Block, Inline, Position */}
-      <Animated.View entering={FadeInUp.delay(1400).duration(700)} style={styles.sectionCard} ref={sectionRefs.layout}>
+
+      {/* Layout */}
+      <Animated.View entering={FadeInUp.delay(1400).duration(700)} style={styles.sectionCard}>
         <Text style={styles.sectionTitle}>Layout: Block, Inline, Position</Text>
         <Text style={styles.sectionText}>
-          CSS controls how elements are displayed: block, inline, inline-block, and positioned (relative, absolute, fixed, sticky).
+          CSS provides different display types and positioning methods to control layout.
         </Text>
         <View style={styles.codeBlock}>
-          <Text style={styles.code}>{`span { display: inline; }
-div { display: block; }
-.menu { position: fixed; top: 0; }`}</Text>
-          <CopyButton text={`span { display: inline; }
-div { display: block; }
-.menu { position: fixed; top: 0; }`} />
+          <Text style={styles.code}>{`/* Display types */
+.block { display: block; }
+.inline { display: inline; }
+.inline-block { display: inline-block; }
+
+/* Positioning */
+.relative { position: relative; }
+.absolute { position: absolute; }
+.fixed { position: fixed; }
+.sticky { position: sticky; }`}</Text>
+          <CopyButton text={`/* Display types */
+.block { display: block; }
+.inline { display: inline; }
+.inline-block { display: inline-block; }
+
+/* Positioning */
+.relative { position: relative; }
+.absolute { position: absolute; }
+.fixed { position: fixed; }
+.sticky { position: sticky; }`} />
         </View>
-        <Callout type="tip">Use <Text style={{ color: PALETTE.primary }}>position: sticky</Text> for sticky headers and sidebars.</Callout>
+        <Callout type="tip">Use <Text style={{ color: PALETTE.primary }}>position: relative</Text> on parent and <Text style={{ color: PALETTE.primary }}>position: absolute</Text> on child for precise positioning.</Callout>
       </Animated.View>
+
       {/* Flexbox */}
-      <Animated.View entering={FadeInUp.delay(1600).duration(700)} style={styles.sectionCard} ref={sectionRefs.flex}>
+      <Animated.View entering={FadeInUp.delay(1600).duration(700)} style={styles.sectionCard}>
         <Text style={styles.sectionTitle}>Flexbox</Text>
         <Text style={styles.sectionText}>
-          Flexbox is a layout model for distributing space and aligning items in a container, even when their size is unknown.
+          Flexbox is a one-dimensional layout method for arranging items in rows or columns.
         </Text>
         <View style={styles.codeBlock}>
           <Text style={styles.code}>{`.container {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  flex-direction: row;
+}
+
+.item {
+  flex: 1;
+  order: 2;
 }`}</Text>
           <CopyButton text={`.container {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  flex-direction: row;
+}
+
+.item {
+  flex: 1;
+  order: 2;
 }`} />
         </View>
-        <Callout type="tip">Use <Text style={{ color: PALETTE.primary }}>gap</Text> for spacing between flex items (supported in all modern browsers).</Callout>
+        <Callout type="tip">Use <Text style={{ color: PALETTE.primary }}>justify-content</Text> for main axis alignment and <Text style={{ color: PALETTE.primary }}>align-items</Text> for cross axis alignment.</Callout>
       </Animated.View>
+
       {/* CSS Grid */}
-      <Animated.View entering={FadeInUp.delay(1800).duration(700)} style={styles.sectionCard} ref={sectionRefs.grid}>
+      <Animated.View entering={FadeInUp.delay(1800).duration(700)} style={styles.sectionCard}>
         <Text style={styles.sectionTitle}>CSS Grid</Text>
         <Text style={styles.sectionText}>
-          CSS Grid is a two-dimensional layout system for the web. It allows you to create complex layouts easily.
+          CSS Grid is a two-dimensional layout system for creating complex web layouts.
         </Text>
         <View style={styles.codeBlock}>
           <Text style={styles.code}>{`.grid {
   display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 16px;
+  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-rows: auto;
+  gap: 20px;
+}
+
+.item {
+  grid-column: 1 / 3;
+  grid-row: 1 / 2;
 }`}</Text>
           <CopyButton text={`.grid {
   display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 16px;
+  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-rows: auto;
+  gap: 20px;
+}
+
+.item {
+  grid-column: 1 / 3;
+  grid-row: 1 / 2;
 }`} />
         </View>
-        <Callout type="tip">Use <Text style={{ color: PALETTE.primary }}>minmax</Text> and <Text style={{ color: PALETTE.primary }}>auto-fit</Text> for responsive grids.</Callout>
+        <Callout type="tip">Use <Text style={{ color: PALETTE.primary }}>fr</Text> units for flexible grid tracks and <Text style={{ color: PALETTE.primary }}>gap</Text> for spacing between grid items.</Callout>
       </Animated.View>
-      {/* Custom Properties (Variables) */}
-      <Animated.View entering={FadeInUp.delay(2000).duration(700)} style={styles.sectionCard} ref={sectionRefs.variables}>
+
+      {/* Custom Properties */}
+      <Animated.View entering={FadeInUp.delay(2000).duration(700)} style={styles.sectionCard}>
         <Text style={styles.sectionTitle}>Custom Properties (Variables)</Text>
         <Text style={styles.sectionText}>
-          CSS variables allow you to store values for reuse throughout your stylesheet.
+          CSS custom properties allow you to define reusable values throughout your stylesheet.
         </Text>
         <View style={styles.codeBlock}>
           <Text style={styles.code}>{`:root {
-  --main-color: #6C63FF;
+  --primary-color: #6C63FF;
+  --secondary-color: #48B1F3;
+  --spacing: 1rem;
 }
+
 .button {
-  background: var(--main-color);
+  background-color: var(--primary-color);
+  padding: var(--spacing);
 }`}</Text>
           <CopyButton text={`:root {
-  --main-color: #6C63FF;
+  --primary-color: #6C63FF;
+  --secondary-color: #48B1F3;
+  --spacing: 1rem;
 }
+
 .button {
-  background: var(--main-color);
+  background-color: var(--primary-color);
+  padding: var(--spacing);
 }`} />
         </View>
-        <Callout type="tip">Variables are inherited and can be dynamically changed with JavaScript.</Callout>
+        <Callout type="tip">Use custom properties for consistent theming and easier maintenance across your project.</Callout>
       </Animated.View>
+
       {/* Transitions & Animations */}
-      <Animated.View entering={FadeInUp.delay(2200).duration(700)} style={styles.sectionCard} ref={sectionRefs.animation}>
+      <Animated.View entering={FadeInUp.delay(2200).duration(700)} style={styles.sectionCard}>
         <Text style={styles.sectionTitle}>Transitions & Animations</Text>
         <Text style={styles.sectionText}>
-          CSS transitions and animations allow you to animate changes to properties.
+          CSS provides powerful tools for creating smooth transitions and complex animations.
         </Text>
         <View style={styles.codeBlock}>
-          <Text style={styles.code}>{`.box {
-  transition: background 0.3s ease;
+          <Text style={styles.code}>{`/* Transitions */
+.button {
+  transition: all 0.3s ease;
 }
+
+/* Animations */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
+}
+
+.fade-in {
+  animation: fadeIn 1s ease-in;
 }`}</Text>
-          <CopyButton text={`.box {
-  transition: background 0.3s ease;
+          <CopyButton text={`/* Transitions */
+.button {
+  transition: all 0.3s ease;
 }
+
+/* Animations */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
+}
+
+.fade-in {
+  animation: fadeIn 1s ease-in;
 }`} />
         </View>
-        <Callout type="tip">Use <Text style={{ color: PALETTE.primary }}>will-change</Text> for performance optimization of animating properties.</Callout>
+        <Callout type="tip">Use <Text style={{ color: PALETTE.primary }}>transition</Text> for simple state changes and <Text style={{ color: PALETTE.primary }}>@keyframes</Text> for complex animations.</Callout>
       </Animated.View>
+
       {/* Responsive Design */}
-      <Animated.View entering={FadeInUp.delay(2400).duration(700)} style={styles.sectionCard} ref={sectionRefs.responsive}>
+      <Animated.View entering={FadeInUp.delay(2400).duration(700)} style={styles.sectionCard}>
         <Text style={styles.sectionTitle}>Responsive Design</Text>
         <Text style={styles.sectionText}>
-          Use media queries, relative units, and modern layout techniques to create responsive designs.
+          Responsive design ensures your website looks great on all devices using media queries and flexible layouts.
         </Text>
         <View style={styles.codeBlock}>
-          <Text style={styles.code}>{`@media (max-width: 600px) {
-  .container { flex-direction: column; }
+          <Text style={styles.code}>{`/* Mobile-first approach */
+.container {
+  width: 100%;
+  padding: 1rem;
+}
+
+/* Tablet */
+@media (min-width: 768px) {
+  .container {
+    width: 750px;
+    margin: 0 auto;
+  }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+  .container {
+    width: 960px;
+  }
 }`}</Text>
-          <CopyButton text={`@media (max-width: 600px) {
-  .container { flex-direction: column; }
+          <CopyButton text={`/* Mobile-first approach */
+.container {
+  width: 100%;
+  padding: 1rem;
+}
+
+/* Tablet */
+@media (min-width: 768px) {
+  .container {
+    width: 750px;
+    margin: 0 auto;
+  }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+  .container {
+    width: 960px;
+  }
 }`} />
         </View>
-        <Callout type="tip">Use <Text style={{ color: PALETTE.primary }}>rem</Text> and <Text style={{ color: PALETTE.primary }}>em</Text> units for scalable layouts.</Callout>
+        <Callout type="tip">Start with mobile styles and use <Text style={{ color: PALETTE.primary }}>min-width</Text> media queries to progressively enhance for larger screens.</Callout>
       </Animated.View>
+
       {/* Preprocessors & PostCSS */}
-      <Animated.View entering={FadeInUp.delay(2600).duration(700)} style={styles.sectionCard} ref={sectionRefs.preprocess}>
+      <Animated.View entering={FadeInUp.delay(2600).duration(700)} style={styles.sectionCard}>
         <Text style={styles.sectionTitle}>Preprocessors & PostCSS</Text>
         <Text style={styles.sectionText}>
-          CSS preprocessors like SASS, LESS, and Stylus add features like variables, nesting, and mixins. PostCSS is a tool for transforming CSS with JavaScript plugins.
+          CSS preprocessors like Sass and Less extend CSS with features like variables, nesting, and mixins.
         </Text>
         <View style={styles.codeBlock}>
-          <Text style={styles.code}>{`$main-color: #6C63FF;
+          <Text style={styles.code}>{`// Sass example
+$primary-color: #6C63FF;
+
 .button {
-  background: $main-color;
+  background-color: $primary-color;
+  
+  &:hover {
+    background-color: darken($primary-color, 10%);
+  }
+  
+  &--large {
+    padding: 1rem 2rem;
+  }
 }`}</Text>
-          <CopyButton text={`$main-color: #6C63FF;
+          <CopyButton text={`// Sass example
+$primary-color: #6C63FF;
+
 .button {
-  background: $main-color;
+  background-color: $primary-color;
+  
+  &:hover {
+    background-color: darken($primary-color, 10%);
+  }
+  
+  &--large {
+    padding: 1rem 2rem;
+  }
 }`} />
         </View>
-        <Callout type="tip">Use autoprefixer with PostCSS to add vendor prefixes automatically.</Callout>
+        <Callout type="tip">Use preprocessors for better organization and maintainability, but be mindful of over-nesting.</Callout>
       </Animated.View>
+
       {/* Browser Support & Prefixes */}
-      <Animated.View entering={FadeInUp.delay(2800).duration(700)} style={styles.sectionCard} ref={sectionRefs.browser}>
+      <Animated.View entering={FadeInUp.delay(2800).duration(700)} style={styles.sectionCard}>
         <Text style={styles.sectionTitle}>Browser Support & Prefixes</Text>
         <Text style={styles.sectionText}>
-          Use <Text style={{ color: PALETTE.primary }}>caniuse.com</Text> to check browser support. Use vendor prefixes for experimental features.
+          Different browsers may require vendor prefixes for certain CSS properties.
         </Text>
         <View style={styles.codeBlock}>
-          <Text style={styles.code}>{`/* Vendor prefixes */
-.box {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  user-select: none;
+          <Text style={styles.code}>{`.flexbox {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.transition {
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  transition: all 0.3s ease;
 }`}</Text>
-          <CopyButton text={`/* Vendor prefixes */
-.box {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  user-select: none;
+          <CopyButton text={`.flexbox {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.transition {
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  transition: all 0.3s ease;
 }`} />
         </View>
-        <Callout type="tip">Use tools like Autoprefixer to automate prefixing.</Callout>
+        <Callout type="tip">Use tools like Autoprefixer to automatically add vendor prefixes based on your browser support requirements.</Callout>
       </Animated.View>
+
       {/* Best Practices */}
-      <Animated.View entering={FadeInUp.delay(3000).duration(700)} style={styles.sectionCard} ref={sectionRefs.best}>
+      <Animated.View entering={FadeInUp.delay(3000).duration(700)} style={styles.sectionCard}>
         <Text style={styles.sectionTitle}>Best Practices</Text>
         <Text style={styles.sectionText}>
-          - Keep CSS modular and reusable.
+          Follow these best practices for clean, maintainable CSS code:
         </Text>
-        <Text style={styles.sectionText}>
-          - Use BEM or other naming conventions for classes.
-        </Text>
-        <Text style={styles.sectionText}>
-          - Minimize specificity and avoid !important.
-        </Text>
-        <Text style={styles.sectionText}>
-          - Test in all major browsers and devices.
-        </Text>
-        <Text style={styles.sectionText}>
-          - Use CSS variables and custom properties for theming.
-        </Text>
-        <Callout type="tip">Keep your CSS clean, DRY, and well-documented for maintainability.</Callout>
+        <View style={styles.codeBlock}>
+          <Text style={styles.code}>{`/* Use meaningful class names */
+.user-profile-card { }
+.navigation-menu { }
+
+/* Group related styles */
+.button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.button--primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+/* Use comments for complex sections */
+/* Header styles */
+.header { }`}</Text>
+          <CopyButton text={`/* Use meaningful class names */
+.user-profile-card { }
+.navigation-menu { }
+
+/* Group related styles */
+.button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.button--primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+/* Use comments for complex sections */
+/* Header styles */
+.header { }`} />
+        </View>
+        <Callout type="tip">Use a consistent naming convention like BEM (Block, Element, Modifier) for better code organization.</Callout>
       </Animated.View>
-      {/* References */}
-      <Animated.View entering={FadeInUp.delay(3200).duration(700)} style={styles.sectionCard} ref={sectionRefs.resources}>
-        <Text style={styles.sectionTitle}>References & Resources</Text>
-        <Pressable onPress={() => openLink('https://developer.mozilla.org/en-US/docs/Web/CSS')}>
-          <Text style={[styles.sectionText, { color: PALETTE.accent, textDecorationLine: 'underline' }]}>- MDN CSS Docs: https://developer.mozilla.org/en-US/docs/Web/CSS</Text>
-        </Pressable>
-        <Pressable onPress={() => openLink('https://css-tricks.com/')}>
-          <Text style={[styles.sectionText, { color: PALETTE.accent, textDecorationLine: 'underline' }]}>- CSS-Tricks: https://css-tricks.com/</Text>
-        </Pressable>
-        <Pressable onPress={() => openLink('https://caniuse.com/')}>
-          <Text style={[styles.sectionText, { color: PALETTE.accent, textDecorationLine: 'underline' }]}>- Can I use: https://caniuse.com/</Text>
-        </Pressable>
+
+      {/* Resources */}
+      <Animated.View entering={FadeInUp.delay(3200).duration(700)} style={styles.sectionCard}>
+        <Text style={styles.sectionTitle}>References</Text>
+        <Text style={styles.sectionText}>
+          Here are some valuable resources for learning more about CSS:
+        </Text>
+        <View style={{ marginTop: 8 }}>
+          <Pressable onPress={() => openLink('https://developer.mozilla.org/en-US/docs/Web/CSS')}>
+            <Text style={[styles.sectionText, { color: PALETTE.primary, textDecorationLine: 'underline' }]}>
+              • MDN Web Docs - CSS
+            </Text>
+          </Pressable>
+          <Pressable onPress={() => openLink('https://css-tricks.com/')}>
+            <Text style={[styles.sectionText, { color: PALETTE.primary, textDecorationLine: 'underline' }]}>
+              • CSS-Tricks
+            </Text>
+          </Pressable>
+          <Pressable onPress={() => openLink('https://caniuse.com/')}>
+            <Text style={[styles.sectionText, { color: PALETTE.primary, textDecorationLine: 'underline' }]}>
+              • Can I Use - Browser Support
+            </Text>
+          </Pressable>
+        </View>
+        <Callout type="tip">Bookmark these resources for quick reference while developing CSS styles.</Callout>
       </Animated.View>
     </ScrollView>
   );
@@ -426,6 +590,21 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: PALETTE.primary,
     marginBottom: 10,
+  },
+  heroTitle: {
+    fontSize: 36,
+    color: LUXURY.text,
+    marginBottom: 12,
+    letterSpacing: 1.2,
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
+  heroSubtitle: {
+    fontSize: 18,
+    color: LUXURY.textMuted,
+    textAlign: 'center',
+    marginBottom: 8,
+    lineHeight: 28,
   },
   sectionText: {
     fontSize: 16,
@@ -484,20 +663,5 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 14,
     fontWeight: 'bold',
-  },
-  heroTitle: {
-    fontSize: 36,
-    color: LUXURY.text,
-    marginBottom: 12,
-    letterSpacing: 1.2,
-    textAlign: 'center',
-    fontWeight: 'bold',
-  },
-  heroSubtitle: {
-    fontSize: 18,
-    color: LUXURY.textMuted,
-    textAlign: 'center',
-    marginBottom: 8,
-    lineHeight: 28,
   },
 }); 

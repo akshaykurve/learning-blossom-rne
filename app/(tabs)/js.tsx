@@ -24,6 +24,1074 @@ const LUXURY = {
   shadow: 'rgba(212,175,55,0.10)',
 };
 
+function Callout({ type, children }: { type: 'tip' | 'warning', children: React.ReactNode }) {
+  return (
+    <View style={[styles.callout, type === 'tip' ? styles.calloutTip : styles.calloutWarning]}>
+      <Text style={styles.calloutText}>{type === 'tip' ? '💡 Tip: ' : '⚠️ Warning: '}{children}</Text>
+    </View>
+  );
+}
+
+function CopyButton({ text }: { text: string }) {
+  return (
+    <Pressable onPress={() => Clipboard.setString(text)} style={styles.copyBtn}>
+      <Text style={styles.copyBtnText}>Copy</Text>
+    </Pressable>
+  );
+}
+
+export default function JSScreen() {
+  const scrollRef = useRef(null);
+
+  const toc: { key: string; label: string }[] = [
+    { key: 'Introduction', label: 'Introduction' },
+    { key: 'Syntax & Structure', label: 'Syntax & Structure' },
+    { key: 'Types & Type Coercion', label: 'Types & Type Coercion' },
+    { key: 'Variables & Scope', label: 'Variables & Scope' },
+    { key: 'Operators & Expressions', label: 'Operators & Expressions' },
+    { key: 'Control Flow', label: 'Control Flow' },
+    { key: 'Functions & Closures', label: 'Functions & Closures' },
+    { key: 'Objects & Prototypes', label: 'Objects & Prototypes' },
+    { key: 'Arrays & Iteration', label: 'Arrays & Iteration' },
+    { key: 'DOM & Events', label: 'DOM & Events' },
+    { key: 'ES6+ Features', label: 'ES6+ Features' },
+    { key: 'Async JavaScript', label: 'Async JavaScript' },
+    { key: 'OOP & Classes', label: 'OOP & Classes' },
+    { key: 'Patterns & Modules', label: 'Patterns & Modules' },
+    { key: 'Error Handling', label: 'Error Handling' },
+    { key: 'Best Practices', label: 'Best Practices' },
+    { key: 'References', label: 'References' },
+  ];
+
+  const openLink = (url: string) => Linking.openURL(url);
+  
+  const scrollToSection = (key: string) => {
+    const sectionIndex = toc.findIndex(item => item.key === key);
+    if (sectionIndex !== -1 && scrollRef.current) {
+      const estimatedY = sectionIndex * 400; // Approximate section height
+      (scrollRef.current as any).scrollTo({ y: estimatedY, animated: true });
+    }
+  };
+
+  return (
+    <ScrollView ref={scrollRef} style={{ backgroundColor: LUXURY.background }} contentContainerStyle={styles.container}>
+      {/* Hero Section */}
+      <Animated.View entering={FadeInUp.duration(700)} style={[styles.sectionCard, { marginTop: 12 }]}>
+        <MaterialCommunityIcons name="language-javascript" size={60} color={LUXURY.gold} style={{ marginBottom: 16 }} />
+        <Text style={styles.heroTitle}>JavaScript Documentation</Text>
+        <Text style={styles.heroSubtitle}>
+          The official, comprehensive guide to <Text style={{ color: LUXURY.gold, fontWeight: 'bold' }}>JavaScript</Text> — the programming language of the web.
+        </Text>
+      </Animated.View>
+
+      {/* Table of Contents */}
+      <Animated.View entering={FadeInUp.delay(200).duration(700)} style={[styles.sectionCard, { marginBottom: 32 }]}>
+        <Text style={styles.sectionTitle}>Table of Contents</Text>
+        {toc.map((item) => (
+          <Pressable key={item.key} onPress={() => scrollToSection(item.key)}>
+            <Text style={[styles.tocItem, { color: PALETTE.primary }]}>
+              • {item.label}
+            </Text>
+          </Pressable>
+        ))}
+      </Animated.View>
+
+      {/* Introduction */}
+      <Animated.View entering={FadeInUp.delay(400).duration(700)} style={styles.sectionCard}>
+        <Text style={styles.sectionTitle}>Introduction</Text>
+        <Text style={styles.sectionText}>
+          JavaScript is a high-level, interpreted programming language that conforms to the ECMAScript specification. It is a language that is also characterized as dynamic, weakly typed, prototype-based and multi-paradigm.
+        </Text>
+        <Text style={styles.sectionText}>
+          JavaScript was originally created to make web pages interactive, but it has grown to become one of the most popular programming languages in the world, used for both frontend and backend development.
+        </Text>
+        <Callout type="tip">JavaScript is the only programming language that runs natively in web browsers, making it essential for web development.</Callout>
+      </Animated.View>
+
+      {/* Syntax & Structure */}
+      <Animated.View entering={FadeInUp.delay(600).duration(700)} style={styles.sectionCard}>
+        <Text style={styles.sectionTitle}>Syntax & Structure</Text>
+        <Text style={styles.sectionText}>
+          JavaScript syntax is similar to C-style languages. It uses semicolons to end statements, curly braces for code blocks, and follows camelCase naming conventions.
+        </Text>
+        <View style={styles.codeBlock}>
+          <Text style={styles.code}>{`// Single line comment
+/* Multi-line comment */
+
+// Variables
+let name = "John";
+const age = 25;
+
+// Functions
+function greet(person) {
+  return "Hello, " + person + "!";
+}
+
+// Objects
+const user = {
+  name: "Alice",
+  age: 30
+};`}</Text>
+          <CopyButton text={`// Single line comment
+/* Multi-line comment */
+
+// Variables
+let name = "John";
+const age = 25;
+
+// Functions
+function greet(person) {
+  return "Hello, " + person + "!";
+}
+
+// Objects
+const user = {
+  name: "Alice",
+  age: 30
+};`} />
+        </View>
+        <Callout type="tip">Use <Text style={{ color: PALETTE.primary }}>const</Text> by default, <Text style={{ color: PALETTE.primary }}>let</Text> when you need to reassign, and avoid <Text style={{ color: PALETTE.primary }}>var</Text>.</Callout>
+      </Animated.View>
+
+      {/* Types & Type Coercion */}
+      <Animated.View entering={FadeInUp.delay(800).duration(700)} style={styles.sectionCard}>
+        <Text style={styles.sectionTitle}>Types & Type Coercion</Text>
+        <Text style={styles.sectionText}>
+          JavaScript has dynamic typing. The seven primitive types are: Number, String, Boolean, Undefined, Null, Symbol, and BigInt. Objects are reference types.
+        </Text>
+        <View style={styles.codeBlock}>
+          <Text style={styles.code}>{`// Primitive types
+let number = 42;
+let string = "Hello";
+let boolean = true;
+let undefined_var = undefined;
+let null_var = null;
+let symbol = Symbol("unique");
+let bigint = 123456789012345678901234567890n;
+
+// Type coercion
+console.log("5" + 3);     // "53" (string concatenation)
+console.log("5" - 3);     // 2 (numeric subtraction)
+console.log(true + 1);    // 2 (boolean to number)`}</Text>
+          <CopyButton text={`// Primitive types
+let number = 42;
+let string = "Hello";
+let boolean = true;
+let undefined_var = undefined;
+let null_var = null;
+let symbol = Symbol("unique");
+let bigint = 123456789012345678901234567890n;
+
+// Type coercion
+console.log("5" + 3);     // "53" (string concatenation)
+console.log("5" - 3);     // 2 (numeric subtraction)
+console.log(true + 1);    // 2 (boolean to number)`} />
+        </View>
+        <Callout type="tip">Use <Text style={{ color: PALETTE.primary }}>===</Text> for strict equality comparison to avoid unexpected type coercion.</Callout>
+      </Animated.View>
+
+      {/* Variables & Scope */}
+      <Animated.View entering={FadeInUp.delay(1000).duration(700)} style={styles.sectionCard}>
+        <Text style={styles.sectionTitle}>Variables & Scope</Text>
+        <Text style={styles.sectionText}>
+          JavaScript has function scope and block scope. <Text style={{ color: PALETTE.primary }}>var</Text> is function-scoped, while <Text style={{ color: PALETTE.primary }}>let</Text> and <Text style={{ color: PALETTE.primary }}>const</Text> are block-scoped.
+        </Text>
+        <View style={styles.codeBlock}>
+          <Text style={styles.code}>{`// Global scope
+let globalVar = "I'm global";
+
+function example() {
+  // Function scope
+  let functionVar = "I'm in function scope";
+  
+  if (true) {
+    // Block scope
+    let blockVar = "I'm in block scope";
+    console.log(blockVar); // Works
+  }
+  
+  // console.log(blockVar); // Error: blockVar is not defined
+}
+
+// Hoisting (var only)
+console.log(hoistedVar); // undefined (not error)
+var hoistedVar = "I'm hoisted";`}</Text>
+          <CopyButton text={`// Global scope
+let globalVar = "I'm global";
+
+function example() {
+  // Function scope
+  let functionVar = "I'm in function scope";
+  
+  if (true) {
+    // Block scope
+    let blockVar = "I'm in block scope";
+    console.log(blockVar); // Works
+  }
+  
+  // console.log(blockVar); // Error: blockVar is not defined
+}
+
+// Hoisting (var only)
+console.log(hoistedVar); // undefined (not error)
+var hoistedVar = "I'm hoisted";`} />
+        </View>
+        <Callout type="tip">Use <Text style={{ color: PALETTE.primary }}>const</Text> for values that won't be reassigned, <Text style={{ color: PALETTE.primary }}>let</Text> for values that will change, and avoid <Text style={{ color: PALETTE.primary }}>var</Text>.</Callout>
+      </Animated.View>
+
+      {/* Operators & Expressions */}
+      <Animated.View entering={FadeInUp.delay(1200).duration(700)} style={styles.sectionCard}>
+        <Text style={styles.sectionTitle}>Operators & Expressions</Text>
+        <Text style={styles.sectionText}>
+          JavaScript supports arithmetic, comparison, logical, assignment, and other operators.
+        </Text>
+        <View style={styles.codeBlock}>
+          <Text style={styles.code}>{`// Arithmetic operators
+let a = 10, b = 3;
+console.log(a + b);  // 13
+console.log(a - b);  // 7
+console.log(a * b);  // 30
+console.log(a / b);  // 3.333...
+console.log(a % b);  // 1
+console.log(a ** b); // 1000
+
+// Comparison operators
+console.log(a > b);   // true
+console.log(a >= b);  // true
+console.log(a == "10"); // true (loose equality)
+console.log(a === "10"); // false (strict equality)
+
+// Logical operators
+console.log(true && false); // false
+console.log(true || false); // true
+console.log(!true);         // false
+
+// Assignment operators
+let x = 5;
+x += 3; // Same as x = x + 3
+console.log(x); // 8`}</Text>
+          <CopyButton text={`// Arithmetic operators
+let a = 10, b = 3;
+console.log(a + b);  // 13
+console.log(a - b);  // 7
+console.log(a * b);  // 30
+console.log(a / b);  // 3.333...
+console.log(a % b);  // 1
+console.log(a ** b); // 1000
+
+// Comparison operators
+console.log(a > b);   // true
+console.log(a >= b);  // true
+console.log(a == "10"); // true (loose equality)
+console.log(a === "10"); // false (strict equality)
+
+// Logical operators
+console.log(true && false); // false
+console.log(true || false); // true
+console.log(!true);         // false
+
+// Assignment operators
+let x = 5;
+x += 3; // Same as x = x + 3
+console.log(x); // 8`} />
+        </View>
+        <Callout type="tip">Always use <Text style={{ color: PALETTE.primary }}>===</Text> and <Text style={{ color: PALETTE.primary }}>!==</Text> for comparisons to avoid unexpected type coercion.</Callout>
+      </Animated.View>
+
+      {/* Control Flow */}
+      <Animated.View entering={FadeInUp.delay(1400).duration(700)} style={styles.sectionCard}>
+        <Text style={styles.sectionTitle}>Control Flow</Text>
+        <Text style={styles.sectionText}>
+          JavaScript provides various control structures for decision making and looping.
+        </Text>
+        <View style={styles.codeBlock}>
+          <Text style={styles.code}>{`// If statements
+let age = 18;
+if (age >= 18) {
+  console.log("Adult");
+} else if (age >= 13) {
+  console.log("Teenager");
+} else {
+  console.log("Child");
+}
+
+// Switch statement
+let day = "Monday";
+switch (day) {
+  case "Monday":
+    console.log("Start of week");
+    break;
+  case "Friday":
+    console.log("Weekend coming!");
+    break;
+  default:
+    console.log("Regular day");
+}
+
+// Loops
+for (let i = 0; i < 5; i++) {
+  console.log(i);
+}
+
+let fruits = ["apple", "banana", "orange"];
+for (let fruit of fruits) {
+  console.log(fruit);
+}`}</Text>
+          <CopyButton text={`// If statements
+let age = 18;
+if (age >= 18) {
+  console.log("Adult");
+} else if (age >= 13) {
+  console.log("Teenager");
+} else {
+  console.log("Child");
+}
+
+// Switch statement
+let day = "Monday";
+switch (day) {
+  case "Monday":
+    console.log("Start of week");
+    break;
+  case "Friday":
+    console.log("Weekend coming!");
+    break;
+  default:
+    console.log("Regular day");
+}
+
+// Loops
+for (let i = 0; i < 5; i++) {
+  console.log(i);
+}
+
+let fruits = ["apple", "banana", "orange"];
+for (let fruit of fruits) {
+  console.log(fruit);
+}`} />
+        </View>
+        <Callout type="tip">Use <Text style={{ color: PALETTE.primary }}>for...of</Text> for arrays and <Text style={{ color: PALETTE.primary }}>for...in</Text> for object properties.</Callout>
+      </Animated.View>
+
+      {/* Functions & Closures */}
+      <Animated.View entering={FadeInUp.delay(1600).duration(700)} style={styles.sectionCard}>
+        <Text style={styles.sectionTitle}>Functions & Closures</Text>
+        <Text style={styles.sectionText}>
+          Functions are first-class citizens in JavaScript. They can be assigned to variables, passed as arguments, and returned from other functions.
+        </Text>
+        <View style={styles.codeBlock}>
+          <Text style={styles.code}>{`// Function declarations
+function greet(name) {
+  return "Hello, " + name;
+}
+
+// Function expressions
+const greet2 = function(name) {
+  return "Hello, " + name;
+};
+
+// Arrow functions
+const greet3 = (name) => "Hello, " + name;
+
+// Closures
+function createCounter() {
+  let count = 0;
+  return function() {
+    return ++count;
+  };
+}
+
+const counter = createCounter();
+console.log(counter()); // 1
+console.log(counter()); // 2`}</Text>
+          <CopyButton text={`// Function declarations
+function greet(name) {
+  return "Hello, " + name;
+}
+
+// Function expressions
+const greet2 = function(name) {
+  return "Hello, " + name;
+};
+
+// Arrow functions
+const greet3 = (name) => "Hello, " + name;
+
+// Closures
+function createCounter() {
+  let count = 0;
+  return function() {
+    return ++count;
+  };
+}
+
+const counter = createCounter();
+console.log(counter()); // 1
+console.log(counter()); // 2`} />
+        </View>
+        <Callout type="tip">Arrow functions don't have their own <Text style={{ color: PALETTE.primary }}>this</Text> binding, making them useful for callbacks and methods.</Callout>
+      </Animated.View>
+
+      {/* Objects & Prototypes */}
+      <Animated.View entering={FadeInUp.delay(1800).duration(700)} style={styles.sectionCard}>
+        <Text style={styles.sectionTitle}>Objects & Prototypes</Text>
+        <Text style={styles.sectionText}>
+          JavaScript uses prototypal inheritance. Objects can inherit properties and methods from other objects through the prototype chain.
+        </Text>
+        <View style={styles.codeBlock}>
+          <Text style={styles.code}>{`// Object literals
+const person = {
+  name: "John",
+  age: 30,
+  greet() {
+    return "Hello, I'm " + this.name;
+  }
+};
+
+// Constructor functions
+function Person(name, age) {
+  this.name = name;
+  this.age = age;
+}
+
+Person.prototype.greet = function() {
+  return "Hello, I'm " + this.name;
+};
+
+// Classes (ES6+)
+class PersonClass {
+  constructor(name, age) {
+    this.name = name;
+    this.age = age;
+  }
+  
+  greet() {
+    return "Hello, I'm " + this.name;
+  }
+}`}</Text>
+          <CopyButton text={`// Object literals
+const person = {
+  name: "John",
+  age: 30,
+  greet() {
+    return "Hello, I'm " + this.name;
+  }
+};
+
+// Constructor functions
+function Person(name, age) {
+  this.name = name;
+  this.age = age;
+}
+
+Person.prototype.greet = function() {
+  return "Hello, I'm " + this.name;
+};
+
+// Classes (ES6+)
+class PersonClass {
+  constructor(name, age) {
+    this.name = name;
+    this.age = age;
+  }
+  
+  greet() {
+    return "Hello, I'm " + this.name;
+  }
+}`} />
+        </View>
+        <Callout type="tip">Use classes for cleaner object-oriented code, but remember they're syntactic sugar over prototypes.</Callout>
+      </Animated.View>
+
+      {/* Arrays & Iteration */}
+      <Animated.View entering={FadeInUp.delay(2000).duration(700)} style={styles.sectionCard}>
+        <Text style={styles.sectionTitle}>Arrays & Iteration</Text>
+        <Text style={styles.sectionText}>
+          Arrays in JavaScript are dynamic and can hold mixed types. Modern array methods provide powerful iteration capabilities.
+        </Text>
+        <View style={styles.codeBlock}>
+          <Text style={styles.code}>{`// Array creation
+const numbers = [1, 2, 3, 4, 5];
+const mixed = [1, "hello", true, { name: "John" }];
+
+// Array methods
+const doubled = numbers.map(x => x * 2);
+const evens = numbers.filter(x => x % 2 === 0);
+const sum = numbers.reduce((acc, curr) => acc + curr, 0);
+
+// Modern iteration
+numbers.forEach(num => console.log(num));
+
+// Destructuring
+const [first, second, ...rest] = numbers;
+console.log(first); // 1
+console.log(rest);  // [3, 4, 5]
+
+// Spread operator
+const newArray = [...numbers, 6, 7];`}</Text>
+          <CopyButton text={`// Array creation
+const numbers = [1, 2, 3, 4, 5];
+const mixed = [1, "hello", true, { name: "John" }];
+
+// Array methods
+const doubled = numbers.map(x => x * 2);
+const evens = numbers.filter(x => x % 2 === 0);
+const sum = numbers.reduce((acc, curr) => acc + curr, 0);
+
+// Modern iteration
+numbers.forEach(num => console.log(num));
+
+// Destructuring
+const [first, second, ...rest] = numbers;
+console.log(first); // 1
+console.log(rest);  // [3, 4, 5]
+
+// Spread operator
+const newArray = [...numbers, 6, 7];`} />
+        </View>
+        <Callout type="tip">Use <Text style={{ color: PALETTE.primary }}>map</Text>, <Text style={{ color: PALETTE.primary }}>filter</Text>, and <Text style={{ color: PALETTE.primary }}>reduce</Text> for functional programming patterns.</Callout>
+      </Animated.View>
+
+      {/* DOM & Events */}
+      <Animated.View entering={FadeInUp.delay(2200).duration(700)} style={styles.sectionCard}>
+        <Text style={styles.sectionTitle}>DOM & Events</Text>
+        <Text style={styles.sectionText}>
+          The Document Object Model (DOM) allows JavaScript to interact with HTML elements. Event handling is crucial for interactive web applications.
+        </Text>
+        <View style={styles.codeBlock}>
+          <Text style={styles.code}>{`// DOM manipulation
+const element = document.getElementById("myElement");
+element.innerHTML = "New content";
+element.classList.add("highlight");
+
+// Event handling
+element.addEventListener("click", function(event) {
+  console.log("Clicked!");
+  event.preventDefault();
+});
+
+// Modern event handling
+element.addEventListener("click", (event) => {
+  console.log("Arrow function handler");
+});
+
+// Event delegation
+document.addEventListener("click", (event) => {
+  if (event.target.matches(".button")) {
+    console.log("Button clicked");
+  }
+});`}</Text>
+          <CopyButton text={`// DOM manipulation
+const element = document.getElementById("myElement");
+element.innerHTML = "New content";
+element.classList.add("highlight");
+
+// Event handling
+element.addEventListener("click", function(event) {
+  console.log("Clicked!");
+  event.preventDefault();
+});
+
+// Modern event handling
+element.addEventListener("click", (event) => {
+  console.log("Arrow function handler");
+});
+
+// Event delegation
+document.addEventListener("click", (event) => {
+  if (event.target.matches(".button")) {
+    console.log("Button clicked");
+  }
+});`} />
+        </View>
+        <Callout type="tip">Use event delegation for dynamically created elements and to improve performance with many event listeners.</Callout>
+      </Animated.View>
+
+      {/* ES6+ Features */}
+      <Animated.View entering={FadeInUp.delay(2400).duration(700)} style={styles.sectionCard}>
+        <Text style={styles.sectionTitle}>ES6+ Features</Text>
+        <Text style={styles.sectionText}>
+          Modern JavaScript (ES6+) introduced many powerful features that make the language more expressive and easier to use.
+        </Text>
+        <View style={styles.codeBlock}>
+          <Text style={styles.code}>{`// Template literals
+const name = "World";
+const greeting = \`Hello, \${name}!\`;
+
+// Destructuring
+const { name: userName, age } = { name: "John", age: 30 };
+const [a, b, c] = [1, 2, 3];
+
+// Default parameters
+function greet(name = "Guest") {
+  return \`Hello, \${name}!\`;
+}
+
+// Rest and spread
+function sum(...numbers) {
+  return numbers.reduce((acc, num) => acc + num, 0);
+}
+
+// Arrow functions
+const multiply = (a, b) => a * b;
+
+// Classes
+class Animal {
+  constructor(name) {
+    this.name = name;
+  }
+  
+  speak() {
+    return \`\${this.name} makes a sound\`;
+  }
+}`}</Text>
+          <CopyButton text={`// Template literals
+const name = "World";
+const greeting = \`Hello, \${name}!\`;
+
+// Destructuring
+const { name: userName, age } = { name: "John", age: 30 };
+const [a, b, c] = [1, 2, 3];
+
+// Default parameters
+function greet(name = "Guest") {
+  return \`Hello, \${name}!\`;
+}
+
+// Rest and spread
+function sum(...numbers) {
+  return numbers.reduce((acc, num) => acc + num, 0);
+}
+
+// Arrow functions
+const multiply = (a, b) => a * b;
+
+// Classes
+class Animal {
+  constructor(name) {
+    this.name = name;
+  }
+  
+  speak() {
+    return \`\${this.name} makes a sound\`;
+  }
+}`} />
+        </View>
+        <Callout type="tip">Use modern ES6+ features for cleaner, more readable code, but ensure browser compatibility or use a transpiler like Babel.</Callout>
+      </Animated.View>
+
+      {/* Async JavaScript */}
+      <Animated.View entering={FadeInUp.delay(2600).duration(700)} style={styles.sectionCard}>
+        <Text style={styles.sectionTitle}>Async JavaScript: Callbacks, Promises, Async/Await</Text>
+        <Text style={styles.sectionText}>
+          JavaScript handles asynchronous operations through callbacks, promises, and async/await syntax.
+        </Text>
+        <View style={styles.codeBlock}>
+          <Text style={styles.code}>{`// Callbacks (older approach)
+function fetchData(callback) {
+  setTimeout(() => {
+    callback("Data received");
+  }, 1000);
+}
+
+fetchData((data) => {
+  console.log(data);
+});
+
+// Promises
+function fetchDataPromise() {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve("Data received");
+    }, 1000);
+  });
+}
+
+fetchDataPromise()
+  .then(data => console.log(data))
+  .catch(error => console.error(error));
+
+// Async/Await (modern approach)
+async function fetchDataAsync() {
+  try {
+    const data = await fetchDataPromise();
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}`}</Text>
+          <CopyButton text={`// Callbacks (older approach)
+function fetchData(callback) {
+  setTimeout(() => {
+    callback("Data received");
+  }, 1000);
+}
+
+fetchData((data) => {
+  console.log(data);
+});
+
+// Promises
+function fetchDataPromise() {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve("Data received");
+    }, 1000);
+  });
+}
+
+fetchDataPromise()
+  .then(data => console.log(data))
+  .catch(error => console.error(error));
+
+// Async/Await (modern approach)
+async function fetchDataAsync() {
+  try {
+    const data = await fetchDataPromise();
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}`} />
+        </View>
+        <Callout type="tip">Use async/await for cleaner asynchronous code, but remember to handle errors with try/catch blocks.</Callout>
+      </Animated.View>
+
+      {/* OOP & Classes */}
+      <Animated.View entering={FadeInUp.delay(2800).duration(700)} style={styles.sectionCard}>
+        <Text style={styles.sectionTitle}>OOP & Classes</Text>
+        <Text style={styles.sectionText}>
+          JavaScript supports object-oriented programming through classes, inheritance, and encapsulation.
+        </Text>
+        <View style={styles.codeBlock}>
+          <Text style={styles.code}>{`// Class definition
+class Animal {
+  constructor(name) {
+    this.name = name;
+  }
+  
+  speak() {
+    return \`\${this.name} makes a sound\`;
+  }
+}
+
+// Inheritance
+class Dog extends Animal {
+  constructor(name, breed) {
+    super(name);
+    this.breed = breed;
+  }
+  
+  speak() {
+    return \`\${this.name} barks\`;
+  }
+  
+  fetch() {
+    return \`\${this.name} fetches the ball\`;
+  }
+}
+
+// Private fields (ES2022)
+class BankAccount {
+  #balance = 0;
+  
+  deposit(amount) {
+    this.#balance += amount;
+  }
+  
+  getBalance() {
+    return this.#balance;
+  }
+}`}</Text>
+          <CopyButton text={`// Class definition
+class Animal {
+  constructor(name) {
+    this.name = name;
+  }
+  
+  speak() {
+    return \`\${this.name} makes a sound\`;
+  }
+}
+
+// Inheritance
+class Dog extends Animal {
+  constructor(name, breed) {
+    super(name);
+    this.breed = breed;
+  }
+  
+  speak() {
+    return \`\${this.name} barks\`;
+  }
+  
+  fetch() {
+    return \`\${this.name} fetches the ball\`;
+  }
+}
+
+// Private fields (ES2022)
+class BankAccount {
+  #balance = 0;
+  
+  deposit(amount) {
+    this.#balance += amount;
+  }
+  
+  getBalance() {
+    return this.#balance;
+  }
+}`} />
+        </View>
+        <Callout type="tip">Use private fields (#) for better encapsulation and to prevent external access to internal state.</Callout>
+      </Animated.View>
+
+      {/* Patterns & Modules */}
+      <Animated.View entering={FadeInUp.delay(3000).duration(700)} style={styles.sectionCard}>
+        <Text style={styles.sectionTitle}>Patterns & Modules</Text>
+        <Text style={styles.sectionText}>
+          JavaScript supports various design patterns and modular code organization through ES6 modules.
+        </Text>
+        <View style={styles.codeBlock}>
+          <Text style={styles.code}>{`// Module pattern
+const calculator = (function() {
+  let result = 0;
+  
+  return {
+    add: function(x) { result += x; },
+    subtract: function(x) { result -= x; },
+    getResult: function() { return result; }
+  };
+})();
+
+// ES6 Modules
+// math.js
+export const add = (a, b) => a + b;
+export const subtract = (a, b) => a - b;
+export default class Calculator { }
+
+// main.js
+import Calculator, { add, subtract } from './math.js';
+
+// Singleton pattern
+class Database {
+  constructor() {
+    if (Database.instance) {
+      return Database.instance;
+    }
+    Database.instance = this;
+  }
+}`}</Text>
+          <CopyButton text={`// Module pattern
+const calculator = (function() {
+  let result = 0;
+  
+  return {
+    add: function(x) { result += x; },
+    subtract: function(x) { result -= x; },
+    getResult: function() { return result; }
+  };
+})();
+
+// ES6 Modules
+// math.js
+export const add = (a, b) => a + b;
+export const subtract = (a, b) => a - b;
+export default class Calculator { }
+
+// main.js
+import Calculator, { add, subtract } from './math.js';
+
+// Singleton pattern
+class Database {
+  constructor() {
+    if (Database.instance) {
+      return Database.instance;
+    }
+    Database.instance = this;
+  }
+}`} />
+        </View>
+        <Callout type="tip">Use ES6 modules for better code organization and to avoid global namespace pollution.</Callout>
+      </Animated.View>
+
+      {/* Error Handling */}
+      <Animated.View entering={FadeInUp.delay(3200).duration(700)} style={styles.sectionCard}>
+        <Text style={styles.sectionTitle}>Error Handling</Text>
+        <Text style={styles.sectionText}>
+          Proper error handling is crucial for robust JavaScript applications. Use try-catch blocks and handle promises properly.
+        </Text>
+        <View style={styles.codeBlock}>
+          <Text style={styles.code}>{`// Try-catch blocks
+try {
+  const result = riskyOperation();
+  console.log(result);
+} catch (error) {
+  console.error("An error occurred:", error.message);
+} finally {
+  console.log("Cleanup code");
+}
+
+// Custom errors
+class ValidationError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "ValidationError";
+  }
+}
+
+// Promise error handling
+fetchDataPromise()
+  .then(data => processData(data))
+  .catch(error => {
+    console.error("Fetch failed:", error);
+    // Handle error gracefully
+  });
+
+// Async/await error handling
+async function handleData() {
+  try {
+    const data = await fetchDataPromise();
+    const processed = await processData(data);
+    return processed;
+  } catch (error) {
+    console.error("Error:", error);
+    throw error; // Re-throw if needed
+  }
+}`}</Text>
+          <CopyButton text={`// Try-catch blocks
+try {
+  const result = riskyOperation();
+  console.log(result);
+} catch (error) {
+  console.error("An error occurred:", error.message);
+} finally {
+  console.log("Cleanup code");
+}
+
+// Custom errors
+class ValidationError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "ValidationError";
+  }
+}
+
+// Promise error handling
+fetchDataPromise()
+  .then(data => processData(data))
+  .catch(error => {
+    console.error("Fetch failed:", error);
+    // Handle error gracefully
+  });
+
+// Async/await error handling
+async function handleData() {
+  try {
+    const data = await fetchDataPromise();
+    const processed = await processData(data);
+    return processed;
+  } catch (error) {
+    console.error("Error:", error);
+    throw error; // Re-throw if needed
+  }
+}`} />
+        </View>
+        <Callout type="tip">Always handle errors gracefully and provide meaningful error messages to users.</Callout>
+      </Animated.View>
+
+      {/* Best Practices */}
+      <Animated.View entering={FadeInUp.delay(3400).duration(700)} style={styles.sectionCard}>
+        <Text style={styles.sectionTitle}>Best Practices</Text>
+        <Text style={styles.sectionText}>
+          Follow these best practices for clean, maintainable JavaScript code:
+        </Text>
+        <View style={styles.codeBlock}>
+          <Text style={styles.code}>{`// Use meaningful variable names
+const userAge = 25;           // Good
+const ua = 25;               // Bad
+
+// Use const by default
+const PI = 3.14159;
+let counter = 0;             // Only use let when reassignment is needed
+
+// Use template literals
+const message = \`Hello, \${name}!\`;  // Good
+const message = "Hello, " + name + "!"; // Bad
+
+// Use arrow functions for callbacks
+const numbers = [1, 2, 3];
+const doubled = numbers.map(n => n * 2);
+
+// Use destructuring
+const { name, age } = user;
+const [first, second] = array;
+
+// Handle errors properly
+try {
+  // Risky operation
+} catch (error) {
+  console.error("Error:", error);
+}`}</Text>
+          <CopyButton text={`// Use meaningful variable names
+const userAge = 25;           // Good
+const ua = 25;               // Bad
+
+// Use const by default
+const PI = 3.14159;
+let counter = 0;             // Only use let when reassignment is needed
+
+// Use template literals
+const message = \`Hello, \${name}!\`;  // Good
+const message = "Hello, " + name + "!"; // Bad
+
+// Use arrow functions for callbacks
+const numbers = [1, 2, 3];
+const doubled = numbers.map(n => n * 2);
+
+// Use destructuring
+const { name, age } = user;
+const [first, second] = array;
+
+// Handle errors properly
+try {
+  // Risky operation
+} catch (error) {
+  console.error("Error:", error);
+}`} />
+        </View>
+        <Callout type="tip">Use ESLint and Prettier to maintain consistent code style and catch potential issues early.</Callout>
+      </Animated.View>
+
+      {/* Resources */}
+      <Animated.View entering={FadeInUp.delay(3600).duration(700)} style={styles.sectionCard}>
+        <Text style={styles.sectionTitle}>References</Text>
+        <Text style={styles.sectionText}>
+          Here are some valuable resources for learning more about JavaScript:
+        </Text>
+        <View style={{ marginTop: 8 }}>
+          <Pressable onPress={() => openLink('https://developer.mozilla.org/en-US/docs/Web/JavaScript')}>
+            <Text style={[styles.sectionText, { color: PALETTE.primary, textDecorationLine: 'underline' }]}>
+              • MDN Web Docs - JavaScript
+            </Text>
+          </Pressable>
+          <Pressable onPress={() => openLink('https://javascript.info/')}>
+            <Text style={[styles.sectionText, { color: PALETTE.primary, textDecorationLine: 'underline' }]}>
+              • JavaScript.info - Modern JavaScript Tutorial
+            </Text>
+          </Pressable>
+          <Pressable onPress={() => openLink('https://tc39.es/ecma262/')}>
+            <Text style={[styles.sectionText, { color: PALETTE.primary, textDecorationLine: 'underline' }]}>
+              • ECMAScript Specification
+            </Text>
+          </Pressable>
+        </View>
+        <Callout type="tip">Bookmark these resources for quick reference while developing JavaScript applications.</Callout>
+      </Animated.View>
+    </ScrollView>
+  );
+}
+
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
@@ -124,824 +1192,3 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-
-function Callout({ type, children }: { type: 'tip' | 'warning', children: React.ReactNode }) {
-  return (
-    <View style={[styles.callout, type === 'tip' ? styles.calloutTip : styles.calloutWarning]}>
-      <Text style={styles.calloutText}>{type === 'tip' ? '💡 Tip: ' : '⚠️ Warning: '}{children}</Text>
-    </View>
-  );
-}
-function CopyButton({ text }: { text: string }) {
-  return (
-    <Pressable onPress={() => Clipboard.setString(text)} style={styles.copyBtn}>
-      <Text style={styles.copyBtnText}>Copy</Text>
-    </Pressable>
-  );
-}
-
-export default function JSScreen() {
-  const scrollRef = useRef(null);
-  const sectionRefs = {
-    intro: useRef(null),
-    syntax: useRef(null),
-    types: useRef(null),
-    variables: useRef(null),
-    operators: useRef(null),
-    control: useRef(null),
-    functions: useRef(null),
-    objects: useRef(null),
-    arrays: useRef(null),
-    dom: useRef(null),
-    es6: useRef(null),
-    async: useRef(null),
-    oop: useRef(null),
-    patterns: useRef(null),
-    modules: useRef(null),
-    browser: useRef(null),
-    best: useRef(null),
-    resources: useRef(null),
-    errors: useRef(null),
-  };
-  const toc: { key: keyof typeof sectionRefs; label: string }[] = [
-    { key: 'intro', label: 'Introduction' },
-    { key: 'syntax', label: 'Syntax & Structure' },
-    { key: 'types', label: 'Types & Type Coercion' },
-    { key: 'variables', label: 'Variables & Scope' },
-    { key: 'operators', label: 'Operators & Expressions' },
-    { key: 'control', label: 'Control Flow' },
-    { key: 'functions', label: 'Functions & Closures' },
-    { key: 'objects', label: 'Objects & Prototypes' },
-    { key: 'arrays', label: 'Arrays & Iteration' },
-    { key: 'dom', label: 'DOM & Events' },
-    { key: 'es6', label: 'ES6+ Features' },
-    { key: 'async', label: 'Async JS: Callbacks, Promises, Async/Await' },
-    { key: 'oop', label: 'OOP & Classes' },
-    { key: 'patterns', label: 'Patterns & Modules' },
-    { key: 'modules', label: 'Modules & Bundling' },
-    { key: 'browser', label: 'Browser APIs & BOM' },
-    { key: 'errors', label: 'Error Handling' },
-    { key: 'best', label: 'Best Practices' },
-    { key: 'resources', label: 'References' },
-  ];
-  const openLink = (url: string) => Linking.openURL(url);
-  const scrollToSection = (key: keyof typeof sectionRefs) => {
-    const ref = sectionRefs[key]?.current;
-    if (ref && scrollRef.current) {
-      (ref as any).measureLayout(
-        (scrollRef.current as any).getInnerViewNode(),
-        (x: number, y: number) => {
-          (scrollRef.current as any).scrollTo({ y: y - 20, animated: true });
-        }
-      );
-    }
-  };
-  return (
-    <ScrollView ref={scrollRef} style={{ backgroundColor: LUXURY.background }} contentContainerStyle={styles.container}>
-      {/* Hero Section */}
-      <Animated.View entering={FadeInUp.duration(700)} style={[styles.sectionCard, { marginTop: 12 }]} ref={sectionRefs.intro}>
-        <MaterialCommunityIcons name="language-javascript" size={60} color={LUXURY.gold} style={{ marginBottom: 16 }} />
-        <Text style={styles.heroTitle}>JavaScript Documentation</Text>
-        <Text style={styles.heroSubtitle}>
-          The official, comprehensive guide to <Text style={{ color: LUXURY.gold, fontWeight: 'bold' }}>JavaScript</Text> — the language of the web.
-        </Text>
-      </Animated.View>
-      {/* Table of Contents */}
-      <Animated.View entering={FadeInUp.delay(200).duration(700)} style={[styles.sectionCard, { marginBottom: 32 }]}> 
-        <Text style={styles.sectionTitle}>Table of Contents</Text>
-        {toc.map((item) => (
-          <Pressable key={item.key} onPress={() => scrollToSection(item.key)}>
-            <Text style={[styles.tocItem, { color: PALETTE.primary }]}>• {item.label}</Text>
-          </Pressable>
-        ))}
-      </Animated.View>
-      {/* Introduction (expanded) */}
-      <Animated.View entering={FadeInUp.delay(400).duration(700)} style={styles.sectionCard} ref={sectionRefs.intro}>
-        <Text style={styles.sectionTitle}>Introduction</Text>
-        <Text style={styles.sectionText}>
-          JavaScript (JS) is a high-level, interpreted, multi-paradigm programming language that powers the dynamic behavior of most websites. It is essential for web interactivity, client-side logic, and modern web applications. JavaScript can also run on servers (Node.js), IoT devices, and even databases.
-        </Text>
-        <Text style={styles.sectionText}>
-          JS is single-threaded, event-driven, and uses a prototype-based inheritance model. It supports functional, imperative, and object-oriented programming styles.
-        </Text>
-        <Callout type="tip">JavaScript is standardized as ECMAScript (ES). The latest version is ES2023, but ES6 (2015) introduced most modern features.</Callout>
-        <Callout type="warning">JavaScript is not the same as Java. They are different languages with different purposes.</Callout>
-      </Animated.View>
-      {/* Syntax & Structure (expanded) */}
-      <Animated.View entering={FadeInUp.delay(600).duration(700)} style={styles.sectionCard} ref={sectionRefs.syntax}>
-        <Text style={styles.sectionTitle}>Syntax & Structure</Text>
-        <Text style={styles.sectionText}>
-          JavaScript syntax is C-like. Statements end with semicolons (optional but recommended). Code blocks use curly braces. Identifiers are case-sensitive. Whitespace is ignored except inside strings.
-        </Text>
-        <View style={styles.codeBlock}>
-          <Text style={styles.code}>{`// Single-line comment
-/* Multi-line comment */
-let x = 5;
-if (x > 0) {
-  console.log('Positive');
-}
-// Automatic Semicolon Insertion (ASI)
-let y = 1
-let z = 2
-[y, z].forEach(console.log)`}</Text>
-          <CopyButton text={`// Single-line comment
-/* Multi-line comment */
-let x = 5;
-if (x > 0) {
-  console.log('Positive');
-}
-// Automatic Semicolon Insertion (ASI)
-let y = 1
-let z = 2
-[y, z].forEach(console.log)`} />
-        </View>
-        <Callout type="tip">Use strict mode (<Text style={{ color: PALETTE.primary }}>&#39;use strict&#39;</Text>) to catch common bugs and enable safer JavaScript.</Callout>
-        <Callout type="warning">Automatic Semicolon Insertion (ASI) can cause bugs. Always use semicolons to avoid pitfalls.</Callout>
-      </Animated.View>
-      {/* Types & Type Coercion (expanded) */}
-      <Animated.View entering={FadeInUp.delay(800).duration(700)} style={styles.sectionCard} ref={sectionRefs.types}>
-        <Text style={styles.sectionTitle}>Types & Type Coercion</Text>
-        <Text style={styles.sectionText}>
-          JavaScript has 8 types: string, number, boolean, null, undefined, symbol, bigint, and object (including arrays, functions, dates, etc.). Types are dynamic and can change at runtime.
-        </Text>
-        <View style={styles.codeBlock}>
-          <Text style={styles.code}>{`typeof 42; // "number"
-typeof 'hi'; // "string"
-typeof null; // "object" (quirk)
-typeof undefined; // "undefined"
-typeof Symbol('s'); // "symbol"
-typeof 10n; // "bigint"
-typeof [1,2,3]; // "object"
-typeof function(){}; // "function"`}</Text>
-          <CopyButton text={`typeof 42; // "number"
-typeof 'hi'; // "string"
-typeof null; // "object" (quirk)
-typeof undefined; // "undefined"
-typeof Symbol('s'); // "symbol"
-typeof 10n; // "bigint"
-typeof [1,2,3]; // "object"
-typeof function(){}; // "function"`} />
-        </View>
-        <Text style={styles.sectionText}>
-          <Text style={{ fontWeight: 'bold' }}>Type Coercion:</Text> JS automatically converts types in some operations. This can lead to unexpected results.
-        </Text>
-        <View style={styles.codeBlock}>
-          <Text style={styles.code}>{`1 + '2' // "12" (number + string = string)
-1 - '2' // -1 (string converted to number)
-false == 0 // true (loose equality)
-false === 0 // false (strict equality)`}</Text>
-          <CopyButton text={`1 + '2' // "12" (number + string = string)
-1 - '2' // -1 (string converted to number)
-false == 0 // true (loose equality)
-false === 0 // false (strict equality)`} />
-        </View>
-        <Callout type="warning">Always use <Text style={{ color: PALETTE.primary }}>===</Text> for strict equality to avoid type coercion bugs.</Callout>
-        <Callout type="tip">Use <Text style={{ color: PALETTE.primary }}>Number()</Text>, <Text style={{ color: PALETTE.primary }}>String()</Text>, <Text style={{ color: PALETTE.primary }}>Boolean()</Text> for explicit conversion.</Callout>
-        <Text style={styles.sectionText}>
-          <Text style={{ fontWeight: 'bold' }}>Truthy &amp; Falsy Values:</Text> Falsy: <Text style={{ color: PALETTE.primary }}>false, 0, &#39;&#39;, null, undefined, NaN</Text>. Everything else is truthy.
-        </Text>
-        <View style={styles.codeBlock}>
-          <Text style={styles.code}>{`Boolean(0); // false
-Boolean(''); // false
-Boolean([]); // true
-Boolean({}); // true`}</Text>
-          <CopyButton text={`Boolean(0); // false
-Boolean(''); // false
-Boolean([]); // true
-Boolean({}); // true`} />
-        </View>
-        <Callout type="tip">Use <Text style={{ color: PALETTE.primary }}>!!</Text> to convert a value to boolean.</Callout>
-      </Animated.View>
-      {/* Variables & Scope (expanded) */}
-      <Animated.View entering={FadeInUp.delay(1000).duration(700)} style={styles.sectionCard} ref={sectionRefs.variables}>
-        <Text style={styles.sectionTitle}>Variables & Scope</Text>
-        <Text style={styles.sectionText}>
-          Use <Text style={{ color: PALETTE.primary }}>let</Text> and <Text style={{ color: PALETTE.primary }}>const</Text> for block-scoped variables. <Text style={{ color: PALETTE.primary }}>var</Text> is function-scoped and hoisted. Variables declared without a keyword become global (not recommended).
-        </Text>
-        <View style={styles.codeBlock}>
-          <Text style={styles.code}>{`let a = 1;
-const b = 2;
-var c = 3;
-function test() {
-  var d = 4;
-  if (true) {
-    let e = 5;
-    const f = 6;
-  }
-  // console.log(e); // ReferenceError
-}`}</Text>
-          <CopyButton text={`let a = 1;
-const b = 2;
-var c = 3;
-function test() {
-  var d = 4;
-  if (true) {
-    let e = 5;
-    const f = 6;
-  }
-  // console.log(e); // ReferenceError
-}`} />
-        </View>
-        <Text style={styles.sectionText}>
-          <Text style={{ fontWeight: 'bold' }}>Hoisting:</Text> <Text style={{ color: PALETTE.primary }}>var</Text> declarations are hoisted and initialized as undefined. <Text style={{ color: PALETTE.primary }}>let</Text> and <Text style={{ color: PALETTE.primary }}>const</Text> are hoisted but not initialized (temporal dead zone).
-        </Text>
-        <View style={styles.codeBlock}>
-          <Text style={styles.code}>{`console.log(x); // undefined
-var x = 5;
-console.log(y); // ReferenceError
-let y = 10;`}</Text>
-          <CopyButton text={`console.log(x); // undefined
-var x = 5;
-console.log(y); // ReferenceError
-let y = 10;`} />
-        </View>
-        <Callout type="tip">Always declare variables at the top of their scope. Prefer <Text style={{ color: PALETTE.primary }}>const</Text> for values that do not change.</Callout>
-        <Callout type="warning">Avoid using global variables. They can lead to hard-to-find bugs and conflicts.</Callout>
-      </Animated.View>
-      {/* Operators & Expressions (deeply expanded) */}
-      <Animated.View entering={FadeInUp.delay(1200).duration(700)} style={styles.sectionCard} ref={sectionRefs.operators}>
-        <Text style={styles.sectionTitle}>Operators & Expressions</Text>
-        <Text style={styles.sectionText}>
-          <Text style={{ fontWeight: 'bold' }}>Definition:</Text> Operators are special symbols or keywords that perform operations on operands (values and variables). Expressions combine values, variables, and operators to produce a result.
-        </Text>
-        <Text style={styles.sectionText}>
-          <Text style={{ fontWeight: 'bold' }}>Types of Operators:</Text>{"\n"}
-          <Text>• Arithmetic: <Text style={{ color: PALETTE.primary }}>+, -, *, /, %, **</Text></Text>{"\n"}
-          <Text>• Assignment: <Text style={{ color: PALETTE.primary }}>=, +=, -=, *=, /=, %=, **=</Text></Text>{"\n"}
-          <Text>• Comparison: <Text style={{ color: PALETTE.primary }}>==, ===, !=, !==, &gt;, &lt;, &gt;=, &lt;=</Text></Text>{"\n"}
-          <Text>• Logical: <Text style={{ color: PALETTE.primary }}>&&, ||, !</Text></Text>{"\n"}
-          <Text>• Bitwise: <Text style={{ color: PALETTE.primary }}>&, |, ^, ~, &lt;&lt;, &gt;&gt;, &gt;&gt;&gt;</Text></Text>{"\n"}
-          <Text>• Ternary: <Text style={{ color: PALETTE.primary }}>condition ? expr1 : expr2</Text></Text>{"\n"}
-          <Text>• Nullish Coalescing: <Text style={{ color: PALETTE.primary }}>??</Text></Text>{"\n"}
-          <Text>• Optional Chaining: <Text style={{ color: PALETTE.primary }}>?.</Text></Text>
-        </Text>
-        <View style={styles.codeBlock}>
-          <Text style={styles.code}>{`let a = 5, b = 2;
-a += b; // 7
-let isEqual = (a === b); // false
-let result = a > b ? 'a is greater' : 'b is greater';
-let safe = user?.profile?.email ?? 'No email';`}</Text>
-          <CopyButton text={`let a = 5, b = 2;
-a += b; // 7
-let isEqual = (a === b); // false
-let result = a > b ? 'a is greater' : 'b is greater';
-let safe = user?.profile?.email ?? 'No email';`} />
-        </View>
-        <Text style={styles.sectionText}>
-          <Text style={{ fontWeight: 'bold' }}>Edge Cases:</Text>{"\n"}
-          <Text>• <Text style={{ color: PALETTE.primary }}>==</Text> vs <Text style={{ color: PALETTE.primary }}>===</Text>: <Text>0 == false is true, but 0 === false is false.</Text></Text>{"\n"}
-          <Text>• Division by zero: <Text>1/0 is Infinity.</Text></Text>{"\n"}
-          <Text>• Chained assignments: <Text>let x = y = 10; (y becomes global if not declared).</Text></Text>
-        </Text>
-        <Callout type="tip">Use <Text style={{ color: PALETTE.primary }}>??</Text> to provide defaults only for <Text style={{ color: PALETTE.primary }}>null</Text> or <Text style={{ color: PALETTE.primary }}>undefined</Text>.</Callout>
-        <Callout type="warning">Always use <Text style={{ color: PALETTE.primary }}>===</Text> and <Text style={{ color: PALETTE.primary }}>!==</Text> for comparisons to avoid coercion bugs.</Callout>
-        <Callout type="tip">Use parentheses to clarify complex expressions and avoid ambiguity.</Callout>
-      </Animated.View>
-      {/* Control Flow (deeply expanded) */}
-      <Animated.View entering={FadeInUp.delay(1400).duration(700)} style={styles.sectionCard} ref={sectionRefs.control}>
-        <Text style={styles.sectionTitle}>Control Flow</Text>
-        <Text style={styles.sectionText}>
-          <Text style={{ fontWeight: 'bold' }}>Definition:</Text> Control flow statements determine the order in which code is executed. JavaScript provides conditional statements, loops, and error handling constructs.
-        </Text>
-        <Text style={styles.sectionText}>
-          <Text style={{ fontWeight: 'bold' }}>Types of Control Flow:</Text>{"\n"}
-          <Text>• Conditional: <Text style={{ color: PALETTE.primary }}>if, else, else if, switch</Text></Text>{"\n"}
-          <Text>• Loops: <Text style={{ color: PALETTE.primary }}>for, while, do...while, for...in, for...of</Text></Text>{"\n"}
-          <Text>• Jump: <Text style={{ color: PALETTE.primary }}>break, continue, return</Text></Text>{"\n"}
-          <Text>• Error Handling: <Text style={{ color: PALETTE.primary }}>try, catch, finally, throw</Text></Text>
-        </Text>
-        <View style={styles.codeBlock}>
-          <Text style={styles.code}>{`if (score > 90) {
-  grade = 'A';
-} else if (score > 80) {
-  grade = 'B';
-} else {
-  grade = 'C';
-}
-
-for (let i = 0; i < 3; i++) {
-  if (i === 1) continue;
-  if (i === 2) break;
-  console.log(i);
-}
-
-try {
-  throw new Error('Oops');
-} catch (e) {
-  console.error(e);
-} finally {
-  console.log('Done');
-}`}</Text>
-          <CopyButton text={`if (score > 90) {
-  grade = 'A';
-} else if (score > 80) {
-  grade = 'B';
-} else {
-  grade = 'C';
-}
-
-for (let i = 0; i < 3; i++) {
-  if (i === 1) continue;
-  if (i === 2) break;
-  console.log(i);
-}
-
-try {
-  throw new Error('Oops');
-} catch (e) {
-  console.error(e);
-} finally {
-  console.log('Done');
-}`} />
-        </View>
-        <Text style={styles.sectionText}>
-          <Text style={{ fontWeight: 'bold' }}>Edge Cases & Best Practices:</Text>{"\n"}
-          <Text>• <Text style={{ color: PALETTE.primary }}>switch</Text> uses strict comparison (===) for case matching.</Text>{"\n"}
-          <Text>• Always use <Text style={{ color: PALETTE.primary }}>break</Text> in <Text style={{ color: PALETTE.primary }}>switch</Text> cases to avoid fall-through.</Text>{"\n"}
-          <Text>• Avoid infinite loops by ensuring loop conditions will eventually be false.</Text>{"\n"}
-          <Text>• Use <Text style={{ color: PALETTE.primary }}>try/catch</Text> for error handling, especially with async/await.</Text>
-        </Text>
-        <Callout type="tip">Use <Text style={{ color: PALETTE.primary }}>for...of</Text> for iterating arrays and <Text style={{ color: PALETTE.primary }}>for...in</Text> for objects (but beware of prototype properties).</Callout>
-        <Callout type="warning">Never use <Text style={{ color: PALETTE.primary }}>return</Text> outside of a function. Avoid <Text style={{ color: PALETTE.primary }}>goto</Text> (not supported in JS).</Callout>
-      </Animated.View>
-      {/* Functions & Closures (deeply expanded) */}
-      <Animated.View entering={FadeInUp.delay(1600).duration(700)} style={styles.sectionCard} ref={sectionRefs.functions}>
-        <Text style={styles.sectionTitle}>Functions & Closures</Text>
-        <Text style={styles.sectionText}>
-          <Text style={{ fontWeight: 'bold' }}>Definition:</Text> Functions are reusable blocks of code. Closures are functions that remember the scope in which they were created, even after that scope has exited.
-        </Text>
-        <Text style={styles.sectionText}>
-          <Text style={{ fontWeight: 'bold' }}>Types of Functions:</Text>{"\n"}
-          <Text>• Function Declaration: <Text style={{ color: PALETTE.primary }}>function foo() {'{}'}</Text></Text>{"\n"}
-          <Text>• Function Expression: <Text style={{ color: PALETTE.primary }}>const foo = function() {'{}'}</Text></Text>{"\n"}
-          <Text>• Arrow Function: <Text style={{ color: PALETTE.primary }}>const foo = () =&gt; {'{}'}</Text></Text>{"\n"}
-          <Text>• IIFE: <Text style={{ color: PALETTE.primary }}>(function() {'{}'})()</Text></Text>
-        </Text>
-        <View style={styles.codeBlock}>
-          <Text style={styles.code}>{`function add(a, b) {
-  return a + b;
-}
-const sub = (a, b) => a - b;
-const makeCounter = () => {
-  let count = 0;
-  return function() { count++; return count; };
-};
-const counter = makeCounter();
-counter(); // 1
-counter(); // 2`}</Text>
-          <CopyButton text={`function add(a, b) {
-  return a + b;
-}
-const sub = (a, b) => a - b;
-const makeCounter = () => {
-  let count = 0;
-  return function() { count++; return count; };
-};
-const counter = makeCounter();
-counter(); // 1
-counter(); // 2`} />
-        </View>
-        <Text style={styles.sectionText}>
-          <Text style={{ fontWeight: 'bold' }}>Edge Cases & Best Practices:</Text>{"\n"}
-          <Text>• Function declarations are hoisted, but expressions are not.</Text>{"\n"}
-          <Text>• Arrow functions do not have their own <Text style={{ color: PALETTE.primary }}>this</Text>, <Text style={{ color: PALETTE.primary }}>arguments</Text>, or <Text style={{ color: PALETTE.primary }}>new.target</Text>.</Text>{"\n"}
-          <Text>• Closures can lead to memory leaks if not managed properly.</Text>{"\n"}
-          <Text>• Use default parameters and rest/spread for flexible APIs.</Text>
-        </Text>
-        <Callout type="tip">Use closures for data privacy and factory functions.</Callout>
-        <Callout type="warning">Avoid using <Text style={{ color: PALETTE.primary }}>arguments</Text> object in arrow functions.</Callout>
-      </Animated.View>
-      {/* Objects & Prototypes (deeply expanded) */}
-      <Animated.View entering={FadeInUp.delay(1800).duration(700)} style={styles.sectionCard} ref={sectionRefs.objects}>
-        <Text style={styles.sectionTitle}>Objects & Prototypes</Text>
-        <Text style={styles.sectionText}>
-          <Text style={{ fontWeight: 'bold' }}>Definition:</Text> Objects are collections of key-value pairs. Prototypes enable inheritance and sharing of methods and properties between objects.
-        </Text>
-        <Text style={styles.sectionText}>
-          <Text style={{ fontWeight: 'bold' }}>Object Creation:</Text>{"\n"}
-          <Text>• Object Literal: <Text style={{ color: PALETTE.primary }}>{'{}'}</Text></Text>{"\n"}
-          <Text>• Constructor: <Text style={{ color: PALETTE.primary }}>new Object()</Text></Text>{"\n"}
-          <Text>• Object.create(proto)</Text>
-        </Text>
-        <View style={styles.codeBlock}>
-          <Text style={styles.code}>{`const obj = { a: 1, b: 2 };
-obj.c = 3;
-console.log(obj.a);
-// Prototypal inheritance
-const parent = { greet() { return 'hi'; } };
-const child = Object.create(parent);
-child.greet();
-// Property descriptors
-Object.defineProperty(obj, 'd', { value: 4, writable: false });`}</Text>
-          <CopyButton text={`const obj = { a: 1, b: 2 };
-obj.c = 3;
-console.log(obj.a);
-// Prototypal inheritance
-const parent = { greet() { return 'hi'; } };
-const child = Object.create(parent);
-child.greet();
-// Property descriptors
-Object.defineProperty(obj, 'd', { value: 4, writable: false });`} />
-        </View>
-        <Text style={styles.sectionText}>
-          <Text style={{ fontWeight: 'bold' }}>Edge Cases & Best Practices:</Text>{"\n"}
-          <Text>• Use <Text style={{ color: PALETTE.primary }}>Object.keys</Text>, <Text style={{ color: PALETTE.primary }}>Object.values</Text>, and <Text style={{ color: PALETTE.primary }}>Object.entries</Text> for iteration.</Text>{"\n"}
-          <Text>• Use <Text style={{ color: PALETTE.primary }}>get</Text> and <Text style={{ color: PALETTE.primary }}>set</Text> for computed properties.</Text>{"\n"}
-          <Text>• Avoid modifying <Text style={{ color: PALETTE.primary }}>__proto__</Text> directly.</Text>{"\n"}
-          <Text>• Use <Text style={{ color: PALETTE.primary }}>Object.freeze</Text> to make objects immutable.</Text>
-        </Text>
-        <Callout type="tip">Use <Text style={{ color: PALETTE.primary }}>Object.assign</Text> for shallow copies and <Text style={{ color: PALETTE.primary }}>structuredClone</Text> for deep copies.</Callout>
-        <Callout type="warning">Be careful with property shadowing and prototype pollution.</Callout>
-      </Animated.View>
-      {/* Arrays & Iteration (deeply expanded) */}
-      <Animated.View entering={FadeInUp.delay(2000).duration(700)} style={styles.sectionCard} ref={sectionRefs.arrays}>
-        <Text style={styles.sectionTitle}>Arrays & Iteration</Text>
-        <Text style={styles.sectionText}>
-          <Text style={{ fontWeight: 'bold' }}>Definition:</Text> Arrays are ordered lists of values. JavaScript arrays are dynamic, can hold mixed types, and have many built-in methods for iteration and transformation.
-        </Text>
-        <Text style={styles.sectionText}>
-          <Text style={{ fontWeight: 'bold' }}>Array Methods:</Text>{"\n"}
-          <Text>• Iteration: <Text style={{ color: PALETTE.primary }}>forEach, map, filter, reduce, some, every, find, findIndex</Text></Text>{"\n"}
-          <Text>• Mutation: <Text style={{ color: PALETTE.primary }}>push, pop, shift, unshift, splice, sort, reverse</Text></Text>{"\n"}
-          <Text>• Access: <Text style={{ color: PALETTE.primary }}>at, includes, indexOf, join, slice, concat</Text></Text>
-        </Text>
-        <View style={styles.codeBlock}>
-          <Text style={styles.code}>{`const arr = [1, 2, 3];
-arr.push(4);
-arr.map(x => x * 2);
-arr.filter(x => x % 2 === 0);
-arr.reduce((sum, x) => sum + x, 0);
-// Iterators
-for (const val of arr) { console.log(val); }
-// Spread
-const arr2 = [...arr, 5];`}</Text>
-          <CopyButton text={`const arr = [1, 2, 3];
-arr.push(4);
-arr.map(x => x * 2);
-arr.filter(x => x % 2 === 0);
-arr.reduce((sum, x) => sum + x, 0);
-// Iterators
-for (const val of arr) { console.log(val); }
-// Spread
-const arr2 = [...arr, 5];`} />
-        </View>
-        <Text style={styles.sectionText}>
-          <Text style={{ fontWeight: 'bold' }}>Edge Cases & Best Practices:</Text>{"\n"}
-          <Text>• Arrays can be sparse (missing indices).</Text>{"\n"}
-          <Text>• Not all objects with a length property are arrays (e.g., arguments, NodeList).</Text>{"\n"}
-          <Text>• Use <Text style={{ color: PALETTE.primary }}>Array.from</Text> to convert array-like objects.</Text>{"\n"}
-          <Text>• Prefer <Text style={{ color: PALETTE.primary }}>map/filter/reduce</Text> for functional programming.</Text>
-        </Text>
-        <View style={styles.codeBlock}>
-          <Text style={styles.code}>{`function sum() {
-  return Array.from(arguments).reduce((a, b) => a + b, 0);
-}`}</Text>
-          <CopyButton text={`function sum() {
-  return Array.from(arguments).reduce((a, b) => a + b, 0);
-}`} />
-        </View>
-        <Callout type="tip">Use <Text style={{ color: PALETTE.primary }}>find</Text>, <Text style={{ color: PALETTE.primary }}>some</Text>, and <Text style={{ color: PALETTE.primary }}>every</Text> for expressive array logic.</Callout>
-        <Callout type="warning">Be careful with <Text style={{ color: PALETTE.primary }}>sort</Text> (it mutates the array and sorts lexicographically by default).</Callout>
-      </Animated.View>
-      {/* DOM & Events (deeply expanded) */}
-      <Animated.View entering={FadeInUp.delay(2200).duration(700)} style={styles.sectionCard} ref={sectionRefs.dom}>
-        <Text style={styles.sectionTitle}>DOM & Events</Text>
-        <Text style={styles.sectionText}>
-          <Text style={{ fontWeight: 'bold' }}>Definition:</Text> The Document Object Model (DOM) is a tree-like structure representing the content of a web page. JavaScript can manipulate the DOM to change content, structure, and style dynamically. Events are actions or occurrences (like clicks or keypresses) that JavaScript can respond to.
-        </Text>
-        <Text style={styles.sectionText}>
-          <Text style={{ fontWeight: 'bold' }}>Common DOM Methods & Events:</Text>{"\n"}
-          <Text>• <Text style={{ color: PALETTE.primary }}>getElementById, querySelector, querySelectorAll</Text> for selecting elements</Text>{"\n"}
-          <Text>• <Text style={{ color: PALETTE.primary }}>addEventListener, removeEventListener</Text> for handling events</Text>{"\n"}
-          <Text>• <Text style={{ color: PALETTE.primary }}>innerHTML, textContent, style</Text> for modifying content and style</Text>
-        </Text>
-        <View style={styles.codeBlock}>
-          <Text style={styles.code}>{`const btn = document.getElementById('myBtn');
-btn.addEventListener('click', function(e) {
-  alert('Button clicked!');
-});
-document.querySelectorAll('.item').forEach(el => el.style.color = 'red');`}</Text>
-          <CopyButton text={`const btn = document.getElementById('myBtn');
-btn.addEventListener('click', function(e) {
-  alert('Button clicked!');
-});
-document.querySelectorAll('.item').forEach(el => el.style.color = 'red');`} />
-        </View>
-        <Text style={styles.sectionText}>
-          <Text style={{ fontWeight: 'bold' }}>Edge Cases & Best Practices:</Text>{"\n"}
-          <Text>• Always remove event listeners when elements are removed to prevent memory leaks.</Text>{"\n"}
-          <Text>• Use event delegation for better performance on many similar elements.</Text>{"\n"}
-          <Text>• Avoid direct DOM manipulation in frameworks like React; use state and props instead.</Text>
-        </Text>
-        <Callout type="tip">Use <Text style={{ color: PALETTE.primary }}>event.target</Text> to access the element that triggered the event.</Callout>
-        <Callout type="warning">Direct DOM manipulation can cause bugs in modern frameworks. Prefer declarative updates.</Callout>
-      </Animated.View>
-      {/* Asynchronous JavaScript (deeply expanded) */}
-      <Animated.View entering={FadeInUp.delay(2400).duration(700)} style={styles.sectionCard} ref={sectionRefs.async}>
-        <Text style={styles.sectionTitle}>Asynchronous JavaScript</Text>
-        <Text style={styles.sectionText}>
-          <Text style={{ fontWeight: 'bold' }}>Definition:</Text> JavaScript is single-threaded but supports asynchronous operations via callbacks, promises, and async/await. This allows non-blocking code for tasks like network requests and timers.
-        </Text>
-        <Text style={styles.sectionText}>
-          <Text style={{ fontWeight: 'bold' }}>Async Patterns:</Text>{"\n"}
-          <Text>• <Text style={{ color: PALETTE.primary }}>setTimeout, setInterval</Text> for timers</Text>{"\n"}
-          <Text>• <Text style={{ color: PALETTE.primary }}>Promise</Text> for chaining async operations</Text>{"\n"}
-          <Text>• <Text style={{ color: PALETTE.primary }}>async/await</Text> for readable async code</Text>
-        </Text>
-        <View style={styles.codeBlock}>
-          <Text style={styles.code}>{`setTimeout(() => console.log('Later'), 1000);
-function fetchData() {
-  return new Promise(resolve => setTimeout(() => resolve('done'), 500));
-}
-async function main() {
-  const result = await fetchData();
-  console.log(result);
-}
-main();`}</Text>
-          <CopyButton text={`setTimeout(() => console.log('Later'), 1000);
-function fetchData() {
-  return new Promise(resolve => setTimeout(() => resolve('done'), 500));
-}
-async function main() {
-  const result = await fetchData();
-  console.log(result);
-}
-main();`} />
-        </View>
-        <Text style={styles.sectionText}>
-          <Text style={{ fontWeight: 'bold' }}>Edge Cases & Best Practices:</Text>{"\n"}
-          <Text>• Always handle promise rejections to avoid unhandled errors.</Text>{"\n"}
-          <Text>• Use <Text style={{ color: PALETTE.primary }}>Promise.all</Text> for parallel async operations.</Text>{"\n"}
-          <Text>• Avoid callback hell by using promises or async/await.</Text>
-        </Text>
-        <Callout type="tip">Use <Text style={{ color: PALETTE.primary }}>await</Text> inside <Text style={{ color: PALETTE.primary }}>try/catch</Text> for error handling in async functions.</Callout>
-        <Callout type="warning">Never block the main thread with long-running synchronous code.</Callout>
-      </Animated.View>
-      {/* ES6+ Features (deeply expanded) */}
-      <Animated.View entering={FadeInUp.delay(2600).duration(700)} style={styles.sectionCard} ref={sectionRefs.es6}>
-        <Text style={styles.sectionTitle}>ES6+ Features</Text>
-        <Text style={styles.sectionText}>
-          <Text style={{ fontWeight: 'bold' }}>Definition:</Text> ES6 (ECMAScript 2015) and later versions introduced major improvements to JavaScript, including new syntax, data structures, and features for better code organization and performance.
-        </Text>
-        <Text style={styles.sectionText}>
-          <Text style={{ fontWeight: 'bold' }}>Key Features:</Text>{"\n"}
-          <Text>• <Text style={{ color: PALETTE.primary }}>let, const</Text> for block-scoped variables</Text>{"\n"}
-          <Text>• <Text style={{ color: PALETTE.primary }}>Arrow functions</Text> for concise function syntax</Text>{"\n"}
-          <Text>• <Text style={{ color: PALETTE.primary }}>Template literals</Text> for multi-line and interpolated strings</Text>{"\n"}
-          <Text>• <Text style={{ color: PALETTE.primary }}>Destructuring</Text> for extracting values from arrays/objects</Text>{"\n"}
-          <Text>• <Text style={{ color: PALETTE.primary }}>Spread/rest</Text> for flexible function arguments and array/object manipulation</Text>{"\n"}
-          <Text>• <Text style={{ color: PALETTE.primary }}>Classes, modules, promises, sets, maps, symbols, async/await</Text></Text>
-        </Text>
-        <View style={styles.codeBlock}>
-          <Text style={styles.code}>{`const [a, b] = [1, 2];
-const obj = { x: 1, y: 2 };
-const { x, y } = obj;
-const arr = [1, 2, 3];
-const arr2 = [...arr, 4];`}</Text>
-          <CopyButton text={`const [a, b] = [1, 2];
-const obj = { x: 1, y: 2 };
-const { x, y } = obj;
-const arr = [1, 2, 3];
-const arr2 = [...arr, 4];`} />
-        </View>
-        <Text style={styles.sectionText}>
-          <Text style={{ fontWeight: 'bold' }}>Edge Cases & Best Practices:</Text>{"\n"}
-          <Text>• Use <Text style={{ color: PALETTE.primary }}>const</Text> by default; use <Text style={{ color: PALETTE.primary }}>let</Text> only when reassignment is needed.</Text>{"\n"}
-          <Text>• Arrow functions do not bind their own <Text style={{ color: PALETTE.primary }}>this</Text>.</Text>{"\n"}
-          <Text>• Destructuring can provide default values and rename variables.</Text>
-        </Text>
-        <Callout type="tip">Use <Text style={{ color: PALETTE.primary }}>import()</Text> for dynamic imports and code splitting.</Callout>
-        <Callout type="warning">Be aware of browser compatibility for newer features.</Callout>
-      </Animated.View>
-      {/* OOP & Classes (deeply expanded) */}
-      <Animated.View entering={FadeInUp.delay(2800).duration(700)} style={styles.sectionCard} ref={sectionRefs.oop}>
-        <Text style={styles.sectionTitle}>OOP & Classes</Text>
-        <Text style={styles.sectionText}>
-          <Text style={{ fontWeight: 'bold' }}>Definition:</Text> Object-Oriented Programming (OOP) in JavaScript is based on prototypes and ES6 classes. Classes provide a cleaner syntax for creating objects and inheritance.
-        </Text>
-        <Text style={styles.sectionText}>
-          <Text style={{ fontWeight: 'bold' }}>Class Syntax & Inheritance:</Text>{"\n"}
-          <Text>• <Text style={{ color: PALETTE.primary }}>class, constructor, extends, super</Text></Text>{"\n"}
-          <Text>• Methods, getters, setters, static methods</Text>
-        </Text>
-        <View style={styles.codeBlock}>
-          <Text style={styles.code}>{`class Animal {
-  constructor(name) {
-    this.name = name;
-  }
-  speak() {
-    return this.name + ' makes a noise.';
-  }
-}
-class Dog extends Animal {
-  speak() {
-    return this.name + ' barks.';
-  }
-}`}</Text>
-          <CopyButton text={`class Animal {
-  constructor(name) {
-    this.name = name;
-  }
-  speak() {
-    return this.name + ' makes a noise.';
-  }
-}
-class Dog extends Animal {
-  speak() {
-    return this.name + ' barks.';
-  }
-}`} />
-        </View>
-        <Text style={styles.sectionText}>
-          <Text style={{ fontWeight: 'bold' }}>Edge Cases & Best Practices:</Text>{"\n"}
-          <Text>• Use <Text style={{ color: PALETTE.primary }}>super</Text> to call parent methods in subclasses.</Text>{"\n"}
-          <Text>• Classes are syntactic sugar over prototypes.</Text>{"\n"}
-          <Text>• Use <Text style={{ color: PALETTE.primary }}>static</Text> for utility methods that do not access instance data.</Text>
-        </Text>
-        <Callout type="tip">Use classes for complex data models and inheritance hierarchies.</Callout>
-        <Callout type="warning">Avoid deep inheritance chains; prefer composition over inheritance when possible.</Callout>
-      </Animated.View>
-      {/* Patterns & Modules (deeply expanded) */}
-      <Animated.View entering={FadeInUp.delay(3000).duration(700)} style={styles.sectionCard} ref={sectionRefs.patterns}>
-        <Text style={styles.sectionTitle}>Patterns & Modules</Text>
-        <Text style={styles.sectionText}>
-          <Text style={{ fontWeight: 'bold' }}>Definition:</Text> Design patterns are reusable solutions to common problems. Modules help organize code into reusable, maintainable files.
-        </Text>
-        <Text style={styles.sectionText}>
-          <Text style={{ fontWeight: 'bold' }}>Common Patterns:</Text>{"\n"}
-          <Text>• Module: Encapsulates code and exposes a public API</Text>{"\n"}
-          <Text>• Singleton: Ensures a class has only one instance</Text>{"\n"}
-          <Text>• Factory: Creates objects without specifying the exact class</Text>{"\n"}
-          <Text>• Observer: Allows objects to subscribe to events</Text>
-        </Text>
-        <View style={styles.codeBlock}>
-          <Text style={styles.code}>{`// Module pattern
-const MyModule = (function() {
-  let privateVar = 0;
-  return {
-    inc() { privateVar++; return privateVar; }
-  };
-})();
-// ES6 module
-// export function foo() {}
-// import { foo } from './foo.js';`}</Text>
-          <CopyButton text={`// Module pattern
-const MyModule = (function() {
-  let privateVar = 0;
-  return {
-    inc() { privateVar++; return privateVar; }
-  };
-})();
-// ES6 module
-// export function foo() {}
-// import { foo } from './foo.js';`} />
-        </View>
-        <Text style={styles.sectionText}>
-          <Text style={{ fontWeight: 'bold' }}>Edge Cases & Best Practices:</Text>{"\n"}
-          <Text>• Use modules to split code into reusable files.</Text>{"\n"}
-          <Text>• Use bundlers (Webpack, Vite, Parcel) for production.</Text>{"\n"}
-          <Text>• Avoid polluting the global namespace.</Text>
-        </Text>
-        <Callout type="tip">Use <Text style={{ color: PALETTE.primary }}>import()</Text> for dynamic imports and code splitting.</Callout>
-        <Callout type="warning">Mixing CommonJS and ES6 modules can cause issues; stick to one system per project.</Callout>
-      </Animated.View>
-      {/* Modules & Bundling (deeply expanded) */}
-      <Animated.View entering={FadeInUp.delay(3200).duration(700)} style={styles.sectionCard} ref={sectionRefs.modules}>
-        <Text style={styles.sectionTitle}>Modules & Bundling</Text>
-        <Text style={styles.sectionText}>
-          <Text style={{ fontWeight: 'bold' }}>Definition:</Text> ES6 modules use <Text style={{ color: PALETTE.primary }}>import</Text> and <Text style={{ color: PALETTE.primary }}>export</Text> to organize code. Bundlers combine modules for deployment.
-        </Text>
-        <View style={styles.codeBlock}>
-          <Text style={styles.code}>{`// foo.js
-export function foo() { return 42; }
-// main.js
-import { foo } from './foo.js';`}</Text>
-          <CopyButton text={`// foo.js
-export function foo() { return 42; }
-// main.js
-import { foo } from './foo.js';`} />
-        </View>
-        <Text style={styles.sectionText}>
-          <Text style={{ fontWeight: 'bold' }}>Edge Cases & Best Practices:</Text>{"\n"}
-          <Text>• Use relative or absolute paths in imports.</Text>{"\n"}
-          <Text>• Use dynamic imports for lazy loading.</Text>{"\n"}
-          <Text>• Avoid circular dependencies.</Text>
-        </Text>
-        <Callout type="tip">Use bundlers to optimize and tree-shake your code for production.</Callout>
-        <Callout type="warning">Be aware of module resolution differences between Node.js and browsers.</Callout>
-      </Animated.View>
-      {/* Browser APIs & BOM (deeply expanded) */}
-      <Animated.View entering={FadeInUp.delay(3400).duration(700)} style={styles.sectionCard} ref={sectionRefs.browser}>
-        <Text style={styles.sectionTitle}>Browser APIs & BOM</Text>
-        <Text style={styles.sectionText}>
-          <Text style={{ fontWeight: 'bold' }}>Definition:</Text> The Browser Object Model (BOM) provides access to browser features outside the DOM, such as <Text style={{ color: PALETTE.primary }}>window</Text>, <Text style={{ color: PALETTE.primary }}>navigator</Text>, <Text style={{ color: PALETTE.primary }}>location</Text>, <Text style={{ color: PALETTE.primary }}>history</Text>, and <Text style={{ color: PALETTE.primary }}>screen</Text>.
-        </Text>
-        <Text style={styles.sectionText}>
-          <Text style={{ fontWeight: 'bold' }}>Common APIs:</Text>{"\n"}
-          <Text>• <Text style={{ color: PALETTE.primary }}>localStorage, sessionStorage</Text> for persistent storage</Text>{"\n"}
-          <Text>• <Text style={{ color: PALETTE.primary }}>fetch</Text> for network requests</Text>{"\n"}
-          <Text>• <Text style={{ color: PALETTE.primary }}>window.addEventListener</Text> for global events</Text>
-        </Text>
-        <View style={styles.codeBlock}>
-          <Text style={styles.code}>{`localStorage.setItem('key', 'value');
-const value = localStorage.getItem('key');
-window.addEventListener('resize', () => console.log(window.innerWidth));`}</Text>
-          <CopyButton text={`localStorage.setItem('key', 'value');
-const value = localStorage.getItem('key');
-window.addEventListener('resize', () => console.log(window.innerWidth));`} />
-        </View>
-        <Text style={styles.sectionText}>
-          <Text style={{ fontWeight: 'bold' }}>Edge Cases & Best Practices:</Text>{"\n"}
-          <Text>• Always check for API support before using (feature detection).</Text>{"\n"}
-          <Text>• Use <Text style={{ color: PALETTE.primary }}>caniuse.com</Text> to check browser compatibility.</Text>
-        </Text>
-        <Callout type="tip">Use <Text style={{ color: PALETTE.primary }}>window</Text> for global variables and functions, but avoid polluting the global scope.</Callout>
-        <Callout type="warning">Not all browser APIs are available in Node.js or all browsers.</Callout>
-      </Animated.View>
-      {/* Error Handling (deeply expanded) */}
-      <Animated.View entering={FadeInUp.delay(3600).duration(700)} style={styles.sectionCard} ref={sectionRefs.errors}>
-        <Text style={styles.sectionTitle}>Error Handling</Text>
-        <Text style={styles.sectionText}>
-          <Text style={{ fontWeight: 'bold' }}>Definition:</Text> Error handling lets you gracefully manage unexpected situations. Use <Text style={{ color: PALETTE.primary }}>try</Text>, <Text style={{ color: PALETTE.primary }}>catch</Text>, <Text style={{ color: PALETTE.primary }}>finally</Text>, and <Text style={{ color: PALETTE.primary }}>throw</Text> to handle and raise errors.
-        </Text>
-        <View style={styles.codeBlock}>
-          <Text style={styles.code}>{`try {
-  throw new Error('Something went wrong');
-} catch (e) {
-  console.error(e.message);
-} finally {
-  cleanup();
-}
-// Custom error
-class MyError extends Error {
-  constructor(msg) { super(msg); this.name = 'MyError'; }
-}`}</Text>
-          <CopyButton text={`try {
-  throw new Error('Something went wrong');
-} catch (e) {
-  console.error(e.message);
-} finally {
-  cleanup();
-}
-// Custom error
-class MyError extends Error {
-  constructor(msg) { super(msg); this.name = 'MyError'; }
-}`} />
-        </View>
-        <Text style={styles.sectionText}>
-          <Text style={{ fontWeight: 'bold' }}>Edge Cases & Best Practices:</Text>{"\n"}
-          <Text>• Always clean up resources in <Text style={{ color: PALETTE.primary }}>finally</Text> blocks.</Text>{"\n"}
-          <Text>• Never swallow errors silently; log or handle them appropriately.</Text>{"\n"}
-          <Text>• Use custom error classes for better error management.</Text>
-        </Text>
-        <Callout type="tip">Use <Text style={{ color: PALETTE.primary }}>try/catch</Text> with <Text style={{ color: PALETTE.primary }}>await</Text> for error handling in async functions.</Callout>
-        <Callout type="warning">Throwing non-Error objects can make debugging harder.</Callout>
-      </Animated.View>
-      {/* Best Practices (deeply expanded) */}
-      <Animated.View entering={FadeInUp.delay(3800).duration(700)} style={styles.sectionCard} ref={sectionRefs.best}>
-        <Text style={styles.sectionTitle}>Best Practices</Text>
-        <Text style={styles.sectionText}>
-          <Text style={{ fontWeight: 'bold' }}>General Guidelines:</Text>{"\n"}
-          <Text>• Use <Text style={{ color: PALETTE.primary }}>const</Text> and <Text style={{ color: PALETTE.primary }}>let</Text> instead of <Text style={{ color: PALETTE.primary }}>var</Text>.</Text>{"\n"}
-          <Text>• Prefer arrow functions for callbacks.</Text>{"\n"}
-          <Text>• Avoid global variables.</Text>{"\n"}
-          <Text>• Use strict equality (<Text style={{ color: PALETTE.primary }}>===</Text>).</Text>{"\n"}
-          <Text>• Document your code and use linters.</Text>{"\n"}
-          <Text>• Write modular, reusable code.</Text>{"\n"}
-          <Text>• Test in all major browsers and devices.</Text>
-        </Text>
-        <View style={styles.codeBlock}>
-          <Text style={styles.code}>{`// Bad
-var foo = 1;
-foo = 2;
-// Good
-const bar = 1;
-// Arrow function
-[1,2,3].forEach(x => console.log(x));`}</Text>
-          <CopyButton text={`// Bad
-var foo = 1;
-foo = 2;
-// Good
-const bar = 1;
-// Arrow function
-[1,2,3].forEach(x => console.log(x));`} />
-        </View>
-        <Callout type="tip">Use tools like ESLint and Prettier to enforce code style and catch bugs early.</Callout>
-        <Callout type="warning">Don&#39;t repeat yourself (DRY). Refactor duplicated code into functions or modules.</Callout>
-      </Animated.View>
-      {/* References */}
-      <Animated.View entering={FadeInUp.delay(3800).duration(700)} style={styles.sectionCard} ref={sectionRefs.resources}>
-        <Text style={styles.sectionTitle}>References & Resources</Text>
-        <Pressable onPress={() => openLink('https://developer.mozilla.org/en-US/docs/Web/JavaScript')}>
-          <Text style={[styles.sectionText, { color: PALETTE.accent, textDecorationLine: 'underline' }]}>- MDN JS Docs: https://developer.mozilla.org/en-US/docs/Web/JavaScript</Text>
-        </Pressable>
-        <Pressable onPress={() => openLink('https://javascript.info/')}>
-          <Text style={[styles.sectionText, { color: PALETTE.accent, textDecorationLine: 'underline' }]}>- JavaScript.info: https://javascript.info/</Text>
-        </Pressable>
-        <Pressable onPress={() => openLink('https://tc39.es/ecma262/')}>
-          <Text style={[styles.sectionText, { color: PALETTE.accent, textDecorationLine: 'underline' }]}>- ECMAScript Spec: https://tc39.es/ecma262/</Text>
-        </Pressable>
-      </Animated.View>
-    </ScrollView>
-  );
-}
