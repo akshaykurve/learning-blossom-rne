@@ -1,8 +1,7 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Clipboard, Linking, Platform, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import Animated, { FadeInUp } from "react-native-reanimated";
-
 const PALETTE = {
   primary: '#6C63FF',
   accent: '#48B1F3',
@@ -42,6 +41,7 @@ function CopyButton({ text }: { text: string }) {
 
 export default function CSSScreen() {
   const scrollRef = useRef(null);
+  const [sectionPositions, setSectionPositions] = useState<{ [key: string]: number }>({});
 
   const toc: { key: string; label: string }[] = [
     { key: 'Introduction', label: 'Introduction' },
@@ -61,16 +61,20 @@ export default function CSSScreen() {
     { key: 'References', label: 'References' },
   ];
 
-  const openLink = (url: string) => Linking.openURL(url);
-  
+  const measureSection = (key: string, event: any) => {
+    const { y } = event.nativeEvent.layout;
+    setSectionPositions(prev => ({ ...prev, [key]: y }));
+  };
+
   const scrollToSection = (key: string) => {
-    const sectionIndex = toc.findIndex(item => item.key === key);
-    if (sectionIndex !== -1 && scrollRef.current) {
-      const estimatedY = sectionIndex * 400; // Approximate section height
-      (scrollRef.current as any).scrollTo({ y: estimatedY, animated: true });
+    const position = sectionPositions[key];
+    if (position !== undefined && scrollRef.current) {
+      (scrollRef.current as any).scrollTo({ y: position - 100, animated: true });
     }
   };
 
+  const openLink = (url: string) => Linking.openURL(url);
+  
   return (
     <ScrollView ref={scrollRef} style={{ backgroundColor: LUXURY.background }} contentContainerStyle={styles.container}>
       {/* Hero Section */}
@@ -93,7 +97,11 @@ export default function CSSScreen() {
       </Animated.View>
 
       {/* Introduction */}
-      <Animated.View entering={FadeInUp.delay(400).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(400).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('Introduction', event)}
+      >
         <Text style={styles.sectionTitle}>Introduction</Text>
         <Text style={styles.sectionText}>
           CSS (Cascading Style Sheets) is the language used to describe the presentation of HTML or XML documents. CSS controls layout, colors, fonts, spacing, and much more.
@@ -102,7 +110,11 @@ export default function CSSScreen() {
       </Animated.View>
 
       {/* Syntax & Structure */}
-      <Animated.View entering={FadeInUp.delay(600).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(600).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('Syntax & Structure', event)}
+      >
         <Text style={styles.sectionTitle}>Syntax & Structure</Text>
         <Text style={styles.sectionText}>
           CSS consists of selectors and declaration blocks. Each declaration includes a property and a value, separated by a colon and ended with a semicolon.
@@ -119,7 +131,11 @@ export default function CSSScreen() {
       </Animated.View>
 
       {/* Selectors */}
-      <Animated.View entering={FadeInUp.delay(800).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(800).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('Selectors', event)}
+      >
         <Text style={styles.sectionTitle}>Selectors</Text>
         <Text style={styles.sectionText}>
           Selectors target HTML elements to apply styles. Types include element, class, ID, attribute, pseudo-class, and pseudo-element selectors.
@@ -154,7 +170,11 @@ p::first-line { font-weight: bold; }`} />
       </Animated.View>
 
       {/* Specificity & Cascade */}
-      <Animated.View entering={FadeInUp.delay(1000).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(1000).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('Specificity & Cascade', event)}
+      >
         <Text style={styles.sectionTitle}>Specificity & Cascade</Text>
         <Text style={styles.sectionText}>
           Specificity determines which CSS rule applies if multiple rules match the same element. The cascade is the order in which rules are applied.
@@ -173,7 +193,11 @@ p { color: green; }     /* specificity: 1 */`} />
       </Animated.View>
 
       {/* Box Model */}
-      <Animated.View entering={FadeInUp.delay(1200).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(1200).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('Box Model', event)}
+      >
         <Text style={styles.sectionTitle}>Box Model</Text>
         <Text style={styles.sectionText}>
           Every element is a rectangular box. The box model consists of content, padding, border, and margin.
@@ -196,7 +220,11 @@ p { color: green; }     /* specificity: 1 */`} />
       </Animated.View>
 
       {/* Layout */}
-      <Animated.View entering={FadeInUp.delay(1400).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(1400).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('Layout: Block, Inline, Position', event)}
+      >
         <Text style={styles.sectionTitle}>Layout: Block, Inline, Position</Text>
         <Text style={styles.sectionText}>
           CSS provides different display types and positioning methods to control layout.
@@ -227,7 +255,11 @@ p { color: green; }     /* specificity: 1 */`} />
       </Animated.View>
 
       {/* Flexbox */}
-      <Animated.View entering={FadeInUp.delay(1600).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(1600).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('Flexbox', event)}
+      >
         <Text style={styles.sectionTitle}>Flexbox</Text>
         <Text style={styles.sectionText}>
           Flexbox is a one-dimensional layout method for arranging items in rows or columns.
@@ -260,7 +292,11 @@ p { color: green; }     /* specificity: 1 */`} />
       </Animated.View>
 
       {/* CSS Grid */}
-      <Animated.View entering={FadeInUp.delay(1800).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(1800).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('CSS Grid', event)}
+      >
         <Text style={styles.sectionTitle}>CSS Grid</Text>
         <Text style={styles.sectionText}>
           CSS Grid is a two-dimensional layout system for creating complex web layouts.
@@ -293,7 +329,11 @@ p { color: green; }     /* specificity: 1 */`} />
       </Animated.View>
 
       {/* Custom Properties */}
-      <Animated.View entering={FadeInUp.delay(2000).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(2000).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('Custom Properties (Variables)', event)}
+      >
         <Text style={styles.sectionTitle}>Custom Properties (Variables)</Text>
         <Text style={styles.sectionText}>
           CSS custom properties allow you to define reusable values throughout your stylesheet.
@@ -324,7 +364,11 @@ p { color: green; }     /* specificity: 1 */`} />
       </Animated.View>
 
       {/* Transitions & Animations */}
-      <Animated.View entering={FadeInUp.delay(2200).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(2200).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('Transitions & Animations', event)}
+      >
         <Text style={styles.sectionTitle}>Transitions & Animations</Text>
         <Text style={styles.sectionText}>
           CSS provides powerful tools for creating smooth transitions and complex animations.
@@ -363,7 +407,11 @@ p { color: green; }     /* specificity: 1 */`} />
       </Animated.View>
 
       {/* Responsive Design */}
-      <Animated.View entering={FadeInUp.delay(2400).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(2400).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('Responsive Design', event)}
+      >
         <Text style={styles.sectionTitle}>Responsive Design</Text>
         <Text style={styles.sectionText}>
           Responsive design ensures your website looks great on all devices using media queries and flexible layouts.
@@ -414,7 +462,11 @@ p { color: green; }     /* specificity: 1 */`} />
       </Animated.View>
 
       {/* Preprocessors & PostCSS */}
-      <Animated.View entering={FadeInUp.delay(2600).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(2600).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('Preprocessors & PostCSS', event)}
+      >
         <Text style={styles.sectionTitle}>Preprocessors & PostCSS</Text>
         <Text style={styles.sectionText}>
           CSS preprocessors like Sass and Less extend CSS with features like variables, nesting, and mixins.
@@ -453,7 +505,11 @@ $primary-color: #6C63FF;
       </Animated.View>
 
       {/* Browser Support & Prefixes */}
-      <Animated.View entering={FadeInUp.delay(2800).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(2800).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('Browser Support & Prefixes', event)}
+      >
         <Text style={styles.sectionTitle}>Browser Support & Prefixes</Text>
         <Text style={styles.sectionText}>
           Different browsers may require vendor prefixes for certain CSS properties.
@@ -486,7 +542,11 @@ $primary-color: #6C63FF;
       </Animated.View>
 
       {/* Best Practices */}
-      <Animated.View entering={FadeInUp.delay(3000).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(3000).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('Best Practices', event)}
+      >
         <Text style={styles.sectionTitle}>Best Practices</Text>
         <Text style={styles.sectionText}>
           Follow these best practices for clean, maintainable CSS code:
@@ -537,7 +597,11 @@ $primary-color: #6C63FF;
       </Animated.View>
 
       {/* Resources */}
-      <Animated.View entering={FadeInUp.delay(3200).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(3200).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('References', event)}
+      >
         <Text style={styles.sectionTitle}>References</Text>
         <Text style={styles.sectionText}>
           Here are some valuable resources for learning more about CSS:

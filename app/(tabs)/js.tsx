@@ -1,8 +1,7 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Clipboard, Linking, Platform, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import Animated, { FadeInUp } from "react-native-reanimated";
-
 const PALETTE = {
   primary: '#6C63FF',
   accent: '#48B1F3',
@@ -42,6 +41,7 @@ function CopyButton({ text }: { text: string }) {
 
 export default function JSScreen() {
   const scrollRef = useRef(null);
+  const [sectionPositions, setSectionPositions] = useState<{ [key: string]: number }>({});
 
   const toc: { key: string; label: string }[] = [
     { key: 'Introduction', label: 'Introduction' },
@@ -63,16 +63,20 @@ export default function JSScreen() {
     { key: 'References', label: 'References' },
   ];
 
-  const openLink = (url: string) => Linking.openURL(url);
-  
+  const measureSection = (key: string, event: any) => {
+    const { y } = event.nativeEvent.layout;
+    setSectionPositions(prev => ({ ...prev, [key]: y }));
+  };
+
   const scrollToSection = (key: string) => {
-    const sectionIndex = toc.findIndex(item => item.key === key);
-    if (sectionIndex !== -1 && scrollRef.current) {
-      const estimatedY = sectionIndex * 400; // Approximate section height
-      (scrollRef.current as any).scrollTo({ y: estimatedY, animated: true });
+    const position = sectionPositions[key];
+    if (position !== undefined && scrollRef.current) {
+      (scrollRef.current as any).scrollTo({ y: position - 100, animated: true });
     }
   };
 
+  const openLink = (url: string) => Linking.openURL(url);
+  
   return (
     <ScrollView ref={scrollRef} style={{ backgroundColor: LUXURY.background }} contentContainerStyle={styles.container}>
       {/* Hero Section */}
@@ -97,7 +101,11 @@ export default function JSScreen() {
       </Animated.View>
 
       {/* Introduction */}
-      <Animated.View entering={FadeInUp.delay(400).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(400).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('Introduction', event)}
+      >
         <Text style={styles.sectionTitle}>Introduction</Text>
         <Text style={styles.sectionText}>
           JavaScript is a high-level, interpreted programming language that conforms to the ECMAScript specification. It is a language that is also characterized as dynamic, weakly typed, prototype-based and multi-paradigm.
@@ -109,7 +117,11 @@ export default function JSScreen() {
       </Animated.View>
 
       {/* Syntax & Structure */}
-      <Animated.View entering={FadeInUp.delay(600).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(600).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('Syntax & Structure', event)}
+      >
         <Text style={styles.sectionTitle}>Syntax & Structure</Text>
         <Text style={styles.sectionText}>
           JavaScript syntax is similar to C-style languages. It uses semicolons to end statements, curly braces for code blocks, and follows camelCase naming conventions.
@@ -154,7 +166,11 @@ const user = {
       </Animated.View>
 
       {/* Types & Type Coercion */}
-      <Animated.View entering={FadeInUp.delay(800).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(800).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('Types & Type Coercion', event)}
+      >
         <Text style={styles.sectionTitle}>Types & Type Coercion</Text>
         <Text style={styles.sectionText}>
           JavaScript has dynamic typing. The seven primitive types are: Number, String, Boolean, Undefined, Null, Symbol, and BigInt. Objects are reference types.
@@ -191,7 +207,11 @@ console.log(true + 1);    // 2 (boolean to number)`} />
       </Animated.View>
 
       {/* Variables & Scope */}
-      <Animated.View entering={FadeInUp.delay(1000).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(1000).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('Variables & Scope', event)}
+      >
         <Text style={styles.sectionTitle}>Variables & Scope</Text>
         <Text style={styles.sectionText}>
           JavaScript has function scope and block scope. <Text style={{ color: PALETTE.primary }}>var</Text> is function-scoped, while <Text style={{ color: PALETTE.primary }}>let</Text> and <Text style={{ color: PALETTE.primary }}>const</Text> are block-scoped.
@@ -240,7 +260,11 @@ var hoistedVar = "I'm hoisted";`} />
       </Animated.View>
 
       {/* Operators & Expressions */}
-      <Animated.View entering={FadeInUp.delay(1200).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(1200).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('Operators & Expressions', event)}
+      >
         <Text style={styles.sectionTitle}>Operators & Expressions</Text>
         <Text style={styles.sectionText}>
           JavaScript supports arithmetic, comparison, logical, assignment, and other operators.
@@ -299,7 +323,11 @@ console.log(x); // 8`} />
       </Animated.View>
 
       {/* Control Flow */}
-      <Animated.View entering={FadeInUp.delay(1400).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(1400).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('Control Flow', event)}
+      >
         <Text style={styles.sectionTitle}>Control Flow</Text>
         <Text style={styles.sectionText}>
           JavaScript provides various control structures for decision making and looping.
@@ -374,7 +402,11 @@ for (let fruit of fruits) {
       </Animated.View>
 
       {/* Functions & Closures */}
-      <Animated.View entering={FadeInUp.delay(1600).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(1600).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('Functions & Closures', event)}
+      >
         <Text style={styles.sectionTitle}>Functions & Closures</Text>
         <Text style={styles.sectionText}>
           Functions are first-class citizens in JavaScript. They can be assigned to variables, passed as arguments, and returned from other functions.
@@ -433,7 +465,11 @@ console.log(counter()); // 2`} />
       </Animated.View>
 
       {/* Objects & Prototypes */}
-      <Animated.View entering={FadeInUp.delay(1800).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(1800).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('Objects & Prototypes', event)}
+      >
         <Text style={styles.sectionTitle}>Objects & Prototypes</Text>
         <Text style={styles.sectionText}>
           JavaScript uses prototypal inheritance. Objects can inherit properties and methods from other objects through the prototype chain.
@@ -504,7 +540,11 @@ class PersonClass {
       </Animated.View>
 
       {/* Arrays & Iteration */}
-      <Animated.View entering={FadeInUp.delay(2000).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(2000).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('Arrays & Iteration', event)}
+      >
         <Text style={styles.sectionTitle}>Arrays & Iteration</Text>
         <Text style={styles.sectionText}>
           Arrays in JavaScript are dynamic and can hold mixed types. Modern array methods provide powerful iteration capabilities.
@@ -553,7 +593,11 @@ const newArray = [...numbers, 6, 7];`} />
       </Animated.View>
 
       {/* DOM & Events */}
-      <Animated.View entering={FadeInUp.delay(2200).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(2200).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('DOM & Events', event)}
+      >
         <Text style={styles.sectionTitle}>DOM & Events</Text>
         <Text style={styles.sectionText}>
           The Document Object Model (DOM) allows JavaScript to interact with HTML elements. Event handling is crucial for interactive web applications.
@@ -608,7 +652,11 @@ document.addEventListener("click", (event) => {
       </Animated.View>
 
       {/* ES6+ Features */}
-      <Animated.View entering={FadeInUp.delay(2400).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(2400).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('ES6+ Features', event)}
+      >
         <Text style={styles.sectionTitle}>ES6+ Features</Text>
         <Text style={styles.sectionText}>
           Modern JavaScript (ES6+) introduced many powerful features that make the language more expressive and easier to use.
@@ -681,7 +729,11 @@ class Animal {
       </Animated.View>
 
       {/* Async JavaScript */}
-      <Animated.View entering={FadeInUp.delay(2600).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(2600).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('Async JavaScript', event)}
+      >
         <Text style={styles.sectionTitle}>Async JavaScript: Callbacks, Promises, Async/Await</Text>
         <Text style={styles.sectionText}>
           JavaScript handles asynchronous operations through callbacks, promises, and async/await syntax.
@@ -758,7 +810,11 @@ async function fetchDataAsync() {
       </Animated.View>
 
       {/* OOP & Classes */}
-      <Animated.View entering={FadeInUp.delay(2800).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(2800).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('OOP & Classes', event)}
+      >
         <Text style={styles.sectionTitle}>OOP & Classes</Text>
         <Text style={styles.sectionText}>
           JavaScript supports object-oriented programming through classes, inheritance, and encapsulation.
@@ -847,7 +903,11 @@ class BankAccount {
       </Animated.View>
 
       {/* Patterns & Modules */}
-      <Animated.View entering={FadeInUp.delay(3000).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(3000).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('Patterns & Modules', event)}
+      >
         <Text style={styles.sectionTitle}>Patterns & Modules</Text>
         <Text style={styles.sectionText}>
           JavaScript supports various design patterns and modular code organization through ES6 modules.
@@ -916,7 +976,11 @@ class Database {
       </Animated.View>
 
       {/* Error Handling */}
-      <Animated.View entering={FadeInUp.delay(3200).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(3200).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('Error Handling', event)}
+      >
         <Text style={styles.sectionTitle}>Error Handling</Text>
         <Text style={styles.sectionText}>
           Proper error handling is crucial for robust JavaScript applications. Use try-catch blocks and handle promises properly.
@@ -1001,7 +1065,11 @@ async function handleData() {
       </Animated.View>
 
       {/* Best Practices */}
-      <Animated.View entering={FadeInUp.delay(3400).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(3400).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('Best Practices', event)}
+      >
         <Text style={styles.sectionTitle}>Best Practices</Text>
         <Text style={styles.sectionText}>
           Follow these best practices for clean, maintainable JavaScript code:
@@ -1064,7 +1132,11 @@ try {
       </Animated.View>
 
       {/* Resources */}
-      <Animated.View entering={FadeInUp.delay(3600).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(3600).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('References', event)}
+      >
         <Text style={styles.sectionTitle}>References</Text>
         <Text style={styles.sectionText}>
           Here are some valuable resources for learning more about JavaScript:

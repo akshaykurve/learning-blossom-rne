@@ -1,8 +1,7 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Clipboard, Linking, Platform, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import Animated, { FadeInUp } from "react-native-reanimated";
-
 const PALETTE = {
   primary: '#6C63FF',
   accent: '#48B1F3',
@@ -44,6 +43,7 @@ function CopyButton({ text }: { text: string }) {
 
 export default function HTMLScreen() {
   const scrollRef = useRef(null);
+  const [sectionPositions, setSectionPositions] = useState<{ [key: string]: number }>({});
 
   const toc: { key: string; label: string }[] = [
     { key: 'Introduction', label: 'Introduction' },
@@ -63,11 +63,15 @@ export default function HTMLScreen() {
     { key: 'References', label: 'References' },
   ];
 
+  const measureSection = (key: string, event: any) => {
+    const { y } = event.nativeEvent.layout;
+    setSectionPositions(prev => ({ ...prev, [key]: y }));
+  };
+
   const scrollToSection = (key: string) => {
-    const sectionIndex = toc.findIndex(item => item.key === key);
-    if (sectionIndex !== -1 && scrollRef.current) {
-      const estimatedY = sectionIndex * 400; // Approximate section height
-      (scrollRef.current as any).scrollTo({ y: estimatedY, animated: true });
+    const position = sectionPositions[key];
+    if (position !== undefined && scrollRef.current) {
+      (scrollRef.current as any).scrollTo({ y: position - 100, animated: true });
     }
   };
 
@@ -99,7 +103,11 @@ export default function HTMLScreen() {
       </Animated.View>
 
       {/* Introduction */}
-      <Animated.View entering={FadeInUp.delay(400).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(400).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('Introduction', event)}
+      >
         <Text style={styles.sectionTitle}>Introduction</Text>
         <Text style={styles.sectionText}>
           HTML (HyperText Markup Language) is the standard markup language for documents designed to be displayed in a web browser. It can be assisted by technologies such as CSS and JavaScript to create rich, interactive websites. HTML describes the structure of a web page semantically and originally included cues for the appearance of the document.
@@ -111,7 +119,11 @@ export default function HTMLScreen() {
       </Animated.View>
 
       {/* Basic Syntax */}
-      <Animated.View entering={FadeInUp.delay(600).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(600).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('Basic Syntax', event)}
+      >
         <Text style={styles.sectionTitle}>Basic Syntax</Text>
         <Text style={styles.sectionText}>
           HTML uses tags to mark up text, images, and other content for display in web browsers. Tags are enclosed in angle brackets, e.g., {'<p>'} for a paragraph. Most tags have an opening and a closing form, e.g., {'<h1>'} and {'</h1>'}.
@@ -124,7 +136,11 @@ export default function HTMLScreen() {
       </Animated.View>
 
       {/* Document Structure */}
-      <Animated.View entering={FadeInUp.delay(800).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(800).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('Document Structure', event)}
+      >
         <Text style={styles.sectionTitle}>Document Structure</Text>
         <Text style={styles.sectionText}>
           Every HTML document starts with a doctype declaration and is structured with <Text style={{ color: PALETTE.primary }}>{'<html>'}</Text>, <Text style={{ color: PALETTE.primary }}>{'<head>'}</Text>, and <Text style={{ color: PALETTE.primary }}>{'<body>'}</Text> tags.
@@ -137,7 +153,11 @@ export default function HTMLScreen() {
       </Animated.View>
 
       {/* Elements & Attributes */}
-      <Animated.View entering={FadeInUp.delay(1000).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(1000).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('Elements & Attributes', event)}
+      >
         <Text style={styles.sectionTitle}>Elements & Attributes</Text>
         <Text style={styles.sectionText}>
           HTML elements are defined by tags, and can have attributes that provide additional information. Attributes are always included in the opening tag and usually come in name/value pairs like <Text style={{ color: PALETTE.primary }}>name={'"'}value{'"'}</Text>.
@@ -153,7 +173,11 @@ export default function HTMLScreen() {
       </Animated.View>
 
       {/* Text & Headings */}
-      <Animated.View entering={FadeInUp.delay(1200).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(1200).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('Text & Headings', event)}
+      >
         <Text style={styles.sectionTitle}>Text & Headings</Text>
         <Text style={styles.sectionText}>
           Use heading tags <Text style={{ color: PALETTE.primary }}>{'<h1>'}</Text> to <Text style={{ color: PALETTE.primary }}>{'<h6>'}</Text> for titles and subtitles. Use <Text style={{ color: PALETTE.primary }}>{'<p>'}</Text> for paragraphs, <Text style={{ color: PALETTE.primary }}>{'<br>'}</Text> for line breaks, and <Text style={{ color: PALETTE.primary }}>{'<hr>'}</Text> for horizontal rules.
@@ -166,7 +190,11 @@ export default function HTMLScreen() {
       </Animated.View>
 
       {/* Links & Images */}
-      <Animated.View entering={FadeInUp.delay(1400).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(1400).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('Links & Images', event)}
+      >
         <Text style={styles.sectionTitle}>Links & Images</Text>
         <Text style={styles.sectionText}>
           Create hyperlinks with <Text style={{ color: PALETTE.primary }}>{'<a>'}</Text> and display images with <Text style={{ color: PALETTE.primary }}>{'<img>'}</Text>. Always use the <Text style={{ color: PALETTE.primary }}>alt</Text> attribute for images for accessibility.
@@ -182,7 +210,11 @@ export default function HTMLScreen() {
       </Animated.View>
 
       {/* Lists */}
-      <Animated.View entering={FadeInUp.delay(1600).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(1600).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('Lists', event)}
+      >
         <Text style={styles.sectionTitle}>Lists</Text>
         <Text style={styles.sectionText}>
           HTML supports ordered lists (<Text style={{ color: PALETTE.primary }}>{'<ol>'}</Text>), unordered lists (<Text style={{ color: PALETTE.primary }}>{'<ul>'}</Text>), and description lists (<Text style={{ color: PALETTE.primary }}>{'<dl>'}</Text>).
@@ -195,7 +227,11 @@ export default function HTMLScreen() {
       </Animated.View>
 
       {/* Tables */}
-      <Animated.View entering={FadeInUp.delay(1800).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(1800).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('Tables', event)}
+      >
         <Text style={styles.sectionTitle}>Tables</Text>
         <Text style={styles.sectionText}>
           Tables are created with <Text style={{ color: PALETTE.primary }}>{'<table>'}</Text>, <Text style={{ color: PALETTE.primary }}>{'<tr>'}</Text> (row), <Text style={{ color: PALETTE.primary }}>{'<th>'}</Text> (header cell), and <Text style={{ color: PALETTE.primary }}>{'<td>'}</Text> (data cell).
@@ -220,7 +256,11 @@ export default function HTMLScreen() {
       </Animated.View>
 
       {/* Forms & Inputs */}
-      <Animated.View entering={FadeInUp.delay(2000).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(2000).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('Forms & Inputs', event)}
+      >
         <Text style={styles.sectionTitle}>Forms & Inputs</Text>
         <Text style={styles.sectionText}>
           Forms collect user input. Use <Text style={{ color: PALETTE.primary }}>{'<form>'}</Text> with input elements like <Text style={{ color: PALETTE.primary }}>{'<input>'}</Text>, <Text style={{ color: PALETTE.primary }}>{'<textarea>'}</Text>, <Text style={{ color: PALETTE.primary }}>{'<select>'}</Text>, and <Text style={{ color: PALETTE.primary }}>{'<button>'}</Text>.
@@ -238,7 +278,11 @@ export default function HTMLScreen() {
       </Animated.View>
 
       {/* Semantic Elements */}
-      <Animated.View entering={FadeInUp.delay(2200).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(2200).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('Semantic Elements', event)}
+      >
         <Text style={styles.sectionTitle}>Semantic Elements</Text>
         <Text style={styles.sectionText}>
           Semantic elements clearly describe their meaning in a human- and machine-readable way. Examples: <Text style={{ color: PALETTE.primary }}>{'<header>'}</Text>, <Text style={{ color: PALETTE.primary }}>{'<nav>'}</Text>, <Text style={{ color: PALETTE.primary }}>{'<main>'}</Text>, <Text style={{ color: PALETTE.primary }}>{'<section>'}</Text>, <Text style={{ color: PALETTE.primary }}>{'<article>'}</Text>, <Text style={{ color: PALETTE.primary }}>{'<aside>'}</Text>, <Text style={{ color: PALETTE.primary }}>{'<footer>'}</Text>.
@@ -251,100 +295,98 @@ export default function HTMLScreen() {
       </Animated.View>
 
       {/* Multimedia */}
-      <Animated.View entering={FadeInUp.delay(2400).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(2400).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('Multimedia', event)}
+      >
         <Text style={styles.sectionTitle}>Multimedia</Text>
         <Text style={styles.sectionText}>
           HTML supports embedding images, audio, video, SVG, and canvas. Use <Text style={{ color: PALETTE.primary }}>{'<audio>'}</Text>, <Text style={{ color: PALETTE.primary }}>{'<video>'}</Text>, <Text style={{ color: PALETTE.primary }}>{'<canvas>'}</Text>, and <Text style={{ color: PALETTE.primary }}>{'<svg>'}</Text> for rich media.
         </Text>
         <View style={styles.codeBlock}>
-          <Text style={styles.code}>{`<audio controls>\n  <source src="sound.mp3" type="audio/mpeg">\n</audio>\n<video width="320" height="240" controls>\n  <source src="movie.mp4" type="video/mp4">\n</video>`}</Text>
-          <CopyButton text={`<audio controls>\n  <source src="sound.mp3" type="audio/mpeg">\n</audio>\n<video width="320" height="240" controls>\n  <source src="movie.mp4" type="video/mp4">\n</video>`} />
+          <Text style={styles.code}>{`<audio controls>\n  <source src="audio.mp3" type="audio/mpeg">\n  Your browser does not support audio.\n</audio>\n\n<video width="320" height="240" controls>\n  <source src="video.mp4" type="video/mp4">\n  Your browser does not support video.\n</video>`}</Text>
+          <CopyButton text={`<audio controls>\n  <source src="audio.mp3" type="audio/mpeg">\n  Your browser does not support audio.\n</audio>\n\n<video width="320" height="240" controls>\n  <source src="video.mp4" type="video/mp4">\n  Your browser does not support video.\n</video>`} />
         </View>
-        <Callout type="tip">Use <Text style={{ color: PALETTE.primary }}>{'<audio>'}</Text> for audio and <Text style={{ color: PALETTE.primary }}>{'<video>'}</Text> for video. Include <Text style={{ color: PALETTE.primary }}>controls</Text> attribute for user interaction.</Callout>
+        <Callout type="tip">Always provide fallback content for multimedia elements to ensure accessibility and compatibility.</Callout>
       </Animated.View>
 
       {/* Meta & SEO */}
-      <Animated.View entering={FadeInUp.delay(2600).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(2600).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('Meta & SEO', event)}
+      >
         <Text style={styles.sectionTitle}>Meta & SEO</Text>
         <Text style={styles.sectionText}>
-          Meta tags go inside the <Text style={{ color: PALETTE.primary }}>{'<head>'}</Text> and provide metadata about the document. Important for SEO and social sharing.
+          Meta tags provide metadata about the HTML document. They are placed in the <Text style={{ color: PALETTE.primary }}>{'<head>'}</Text> section and are crucial for SEO and social media sharing.
         </Text>
         <View style={styles.codeBlock}>
-          <Text style={styles.code}>{`<meta charset="UTF-8">\n<meta name="description" content="Free Web tutorials">\n<meta name="keywords" content="HTML,CSS,JavaScript">\n<meta name="author" content="John Doe">\n<meta name="viewport" content="width=device-width, initial-scale=1.0">`}</Text>
-          <CopyButton text={`<meta charset="UTF-8">\n<meta name="description" content="Free Web tutorials">\n<meta name="keywords" content="HTML,CSS,JavaScript">\n<meta name="author" content="John Doe">\n<meta name="viewport" content="width=device-width, initial-scale=1.0">`} />
+          <Text style={styles.code}>{`<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <meta name="description" content="Page description for SEO">\n  <meta name="keywords" content="HTML, CSS, JavaScript">\n  <meta property="og:title" content="Page Title">\n  <meta property="og:description" content="Page description">\n  <meta property="og:image" content="image.jpg">\n</head>`}</Text>
+          <CopyButton text={`<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <meta name="description" content="Page description for SEO">\n  <meta name="keywords" content="HTML, CSS, JavaScript">\n  <meta property="og:title" content="Page Title">\n  <meta property="og:description" content="Page description">\n  <meta property="og:image" content="image.jpg">\n</head>`} />
         </View>
-        <Callout type="tip">Use <Text style={{ color: PALETTE.primary }}>{'<meta>'}</Text> tags to provide metadata about your HTML document, including character set, description, keywords, author, and viewport settings.</Callout>
+        <Callout type="tip">Use descriptive meta descriptions and proper Open Graph tags for better social media sharing and SEO.</Callout>
       </Animated.View>
 
       {/* Accessibility */}
-      <Animated.View entering={FadeInUp.delay(2800).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(2800).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('Accessibility', event)}
+      >
         <Text style={styles.sectionTitle}>Accessibility</Text>
         <Text style={styles.sectionText}>
-          Use semantic HTML, proper <Text style={{ color: PALETTE.primary }}>alt</Text> text, labels, and ARIA attributes to make your site accessible to all users, including those using screen readers.
+          Make your HTML accessible to all users, including those with disabilities. Use semantic elements, proper heading structure, alt text for images, and ARIA attributes when needed.
         </Text>
-        <Text style={styles.sectionText}>
-          Ensure good color contrast, keyboard navigation, and logical heading order for best accessibility.
-        </Text>
-        <Callout type="tip">Use semantic HTML, proper <Text style={{ color: PALETTE.primary }}>alt</Text> text, labels, and ARIA attributes to make your site accessible to all users, including those using screen readers.</Callout>
+        <View style={styles.codeBlock}>
+          <Text style={styles.code}>{`<!-- Good accessibility practices -->\n<button aria-label="Close dialog">×</button>\n<img src="chart.png" alt="Sales chart showing 25% increase">\n<nav aria-label="Main navigation">\n  <ul>\n    <li><a href="#home">Home</a></li>\n    <li><a href="#about">About</a></li>\n  </ul>\n</nav>`}</Text>
+          <CopyButton text={`<!-- Good accessibility practices -->\n<button aria-label="Close dialog">×</button>\n<img src="chart.png" alt="Sales chart showing 25% increase">\n<nav aria-label="Main navigation">\n  <ul>\n    <li><a href="#home">Home</a></li>\n    <li><a href="#about">About</a></li>\n  </ul>\n</nav>`} />
+        </View>
+        <Callout type="tip">Test your pages with screen readers and keyboard navigation to ensure they are accessible to all users.</Callout>
       </Animated.View>
 
       {/* Best Practices */}
-      <Animated.View entering={FadeInUp.delay(3000).duration(700)} style={styles.sectionCard}>
+      <Animated.View 
+        entering={FadeInUp.delay(3000).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('Best Practices', event)}
+      >
         <Text style={styles.sectionTitle}>Best Practices</Text>
         <Text style={styles.sectionText}>
-          Follow these best practices for clean, maintainable HTML code:
+          Follow these best practices for clean, maintainable, and standards-compliant HTML code.
         </Text>
         <View style={styles.codeBlock}>
-          <Text style={styles.code}>{`<!-- Use semantic elements -->
-<header>Site Header</header>
-<nav>Navigation</nav>
-<main>Main Content</main>
-<footer>Site Footer</footer>
-
-<!-- Use proper indentation -->
-<html>
-  <head>
-    <title>Document Title</title>
-  </head>
-  <body>
-    <h1>Main Title</h1>
-    <p>Content here</p>
-  </body>
-</html>
-
-<!-- Use lowercase for tags and attributes -->
-<div class="container" id="main">
-  <p>Content</p>
-</div>`}</Text>
-          <CopyButton text={`<!-- Use semantic elements -->\n<header>Site Header</header>\n<nav>Navigation</nav>\n<main>Main Content</main>\n<footer>Site Footer</footer>\n\n<!-- Use proper indentation -->\n<html>\n  <head>\n    <title>Document Title</title>\n  </head>\n  <body>\n    <h1>Main Title</h1>\n    <p>Content here</p>\n  </body>\n</html>\n\n<!-- Use lowercase for tags and attributes -->\n<div class="container" id="main">\n  <p>Content</p>\n</div>`} />
+          <Text style={styles.code}>{`<!-- ✅ Good practices -->\n<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <title>Page Title</title>\n</head>\n<body>\n  <header>\n    <h1>Main Title</h1>\n  </header>\n  <main>\n    <section>\n      <h2>Section Title</h2>\n      <p>Content here.</p>\n    </section>\n  </main>\n  <footer>\n    <p>&copy; 2024</p>\n  </footer>\n</body>\n</html>`}</Text>
+          <CopyButton text={`<!-- ✅ Good practices -->\n<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <title>Page Title</title>\n</head>\n<body>\n  <header>\n    <h1>Main Title</h1>\n  </header>\n  <main>\n    <section>\n      <h2>Section Title</h2>\n      <p>Content here.</p>\n    </section>\n  </main>\n  <footer>\n    <p>&copy; 2024</p>\n  </footer>\n</body>\n</html>`} />
         </View>
-        <Callout type="tip">Always validate your HTML using the W3C validator to ensure standards compliance.</Callout>
+        <Callout type="warning">❌ Avoid using deprecated tags like <Text style={{ color: PALETTE.primary }}>{'<font>'}</Text>, <Text style={{ color: PALETTE.primary }}>{'<center>'}</Text>, or <Text style={{ color: PALETTE.primary }}>{'<marquee>'}</Text>. Use CSS for styling instead.</Callout>
       </Animated.View>
 
-      {/* Resources */}
-      <Animated.View entering={FadeInUp.delay(3200).duration(700)} style={styles.sectionCard}>
+      {/* References */}
+      <Animated.View 
+        entering={FadeInUp.delay(3200).duration(700)} 
+        style={styles.sectionCard}
+        onLayout={(event) => measureSection('References', event)}
+      >
         <Text style={styles.sectionTitle}>References</Text>
         <Text style={styles.sectionText}>
-          Here are some valuable resources for learning more about HTML:
+          Explore these resources to learn more about HTML and web development.
         </Text>
-        <View style={{ marginTop: 8 }}>
+        <View style={styles.linkContainer}>
           <Pressable onPress={() => openLink('https://developer.mozilla.org/en-US/docs/Web/HTML')}>
-            <Text style={[styles.sectionText, { color: PALETTE.primary, textDecorationLine: 'underline' }]}>
-              • MDN Web Docs - HTML
-            </Text>
+            <Text style={styles.link}>• MDN Web Docs - HTML</Text>
           </Pressable>
           <Pressable onPress={() => openLink('https://www.w3.org/TR/html52/')}>
-            <Text style={[styles.sectionText, { color: PALETTE.primary, textDecorationLine: 'underline' }]}>
-              • W3C HTML Specification
-            </Text>
+            <Text style={styles.link}>• W3C HTML Specification</Text>
+          </Pressable>
+          <Pressable onPress={() => openLink('https://html.spec.whatwg.org/')}>
+            <Text style={styles.link}>• HTML Living Standard</Text>
           </Pressable>
           <Pressable onPress={() => openLink('https://validator.w3.org/')}>
-            <Text style={[styles.sectionText, { color: PALETTE.primary, textDecorationLine: 'underline' }]}>
-              • W3C HTML Validator
-            </Text>
+            <Text style={styles.link}>• W3C HTML Validator</Text>
           </Pressable>
         </View>
-        <Callout type="tip">Bookmark these resources for quick reference while developing HTML pages.</Callout>
+        <Callout type="tip">Use the W3C validator to check your HTML for errors and ensure it follows web standards.</Callout>
       </Animated.View>
     </ScrollView>
   );
@@ -454,5 +496,13 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 14,
     fontWeight: 'bold',
+  },
+  linkContainer: {
+    marginTop: 8,
+  },
+  link: {
+    color: PALETTE.primary,
+    textDecorationLine: 'underline',
+    marginBottom: 4,
   },
 }); 
