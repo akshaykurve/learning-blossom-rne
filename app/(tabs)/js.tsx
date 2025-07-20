@@ -256,7 +256,7 @@ function example() {
 console.log(hoistedVar); // undefined (not error)
 var hoistedVar = "I'm hoisted";`} />
         </View>
-        <Callout type="tip">Use <Text style={{ color: PALETTE.primary }}>const</Text> for values that won't be reassigned, <Text style={{ color: PALETTE.primary }}>let</Text> for values that will change, and avoid <Text style={{ color: PALETTE.primary }}>var</Text>.</Callout>
+        <Callout type="tip">Use <Text style={{ color: PALETTE.primary }}>const</Text> for values that won&apos;t be reassigned, <Text style={{ color: PALETTE.primary }}>let</Text> for values that will change, and avoid <Text style={{ color: PALETTE.primary }}>var</Text>.</Callout>
       </Animated.View>
 
       {/* Operators & Expressions */}
@@ -461,7 +461,7 @@ const counter = createCounter();
 console.log(counter()); // 1
 console.log(counter()); // 2`} />
         </View>
-        <Callout type="tip">Arrow functions don't have their own <Text style={{ color: PALETTE.primary }}>this</Text> binding, making them useful for callbacks and methods.</Callout>
+        <Callout type="tip">Arrow functions don&apos;t have their own <Text style={{ color: PALETTE.primary }}>this</Text> binding, making them useful for callbacks and methods.</Callout>
       </Animated.View>
 
       {/* Objects & Prototypes */}
@@ -536,7 +536,7 @@ class PersonClass {
   }
 }`} />
         </View>
-        <Callout type="tip">Use classes for cleaner object-oriented code, but remember they're syntactic sugar over prototypes.</Callout>
+        <Callout type="tip">Use classes for cleaner object-oriented code, but remember they&apos;re syntactic sugar over prototypes.</Callout>
       </Animated.View>
 
       {/* Arrays & Iteration */}

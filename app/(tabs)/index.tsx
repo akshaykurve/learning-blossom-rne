@@ -3,7 +3,7 @@ import { Raleway_400Regular, Raleway_700Bold, useFonts as useRaleway } from '@ex
 import { FontAwesome5, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from "expo-router";
 import React from "react";
-import { Dimensions, Image, Platform, Animated as RNAnimated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Dimensions, Image, Modal, Platform, Animated as RNAnimated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Animated, { Easing, Extrapolate, FadeIn, FadeInUp, ZoomIn, interpolate, useAnimatedScrollHandler, useAnimatedStyle, useSharedValue, withRepeat, withSequence, withTiming } from "react-native-reanimated";
 
 const { width } = Dimensions.get("window");
@@ -210,6 +210,11 @@ export default function Index() {
     transform: [{ scale: ctaPulse.value }],
   }));
 
+  const [showHtmlModal, setShowHtmlModal] = React.useState(false);
+  const [showCssOutput, setShowCssOutput] = React.useState(false);
+  const [showJsOutput, setShowJsOutput] = React.useState(false);
+  const [jsAlert, setJsAlert] = React.useState('');
+
   const [fontsLoaded] = useRaleway({ Raleway_400Regular, Raleway_700Bold });
   const [bodoniLoaded] = useBodoni({ BodoniModa_700Bold });
   if (!fontsLoaded || !bodoniLoaded) return null;
@@ -238,7 +243,11 @@ export default function Index() {
             return <React.Fragment key={idx}>{part}</React.Fragment>;
           })}</Text>
           <Animated.View style={typewriterDone ? ctaPulseStyle : undefined}>
-            <TouchableOpacity style={luxuryStyles.ctaButton} disabled={displayedButton.length < buttonText.length}>
+            <TouchableOpacity 
+              style={luxuryStyles.ctaButton} 
+              disabled={displayedButton.length < buttonText.length}
+              onPress={() => router.push('/html')}
+            >
               <Text style={luxuryStyles.ctaText}>{displayedButton}</Text>
             </TouchableOpacity>
           </Animated.View>
@@ -296,21 +305,71 @@ export default function Index() {
       <Animated.View entering={FadeIn.delay(600).duration(800)} style={luxuryStyles.samplesSection}>
         <Text style={luxuryStyles.sectionTitle}>Samples</Text>
         <View style={luxuryStyles.samplesColumn}>
-          {techCards.map((card, idx) => (
-            <Animated.View key={card.key} entering={FadeInUp.delay(200 * idx).duration(700)} style={luxuryStyles.sampleCard}>
-              <Text style={[luxuryStyles.sampleLabel, { color: card.color }]}>{card.title}</Text>
-              <View style={luxuryStyles.codeBox}>
-                <Text style={[luxuryStyles.code, { color: '#000' }]}>
-                  {idx === 0 && `<button>Click Me!</button>`}
-                  {idx === 1 && `button {\n  background: #61dafb;\n  border: none;\n  padding: 8px 16px;\n  border-radius: 6px;\n}`}
-                  {idx === 2 && `document.querySelector('button').onclick = () => alert('Hello!');`}
-                </Text>
+          {/* HTML Sample */}
+          <Animated.View entering={FadeInUp.delay(0).duration(700)} style={luxuryStyles.sampleCard}>
+            <Text style={[luxuryStyles.sampleLabel, { color: PALETTE.primary }]}>HTML</Text>
+            <View style={luxuryStyles.codeBox}>
+              <Text style={[luxuryStyles.code, { color: '#000' }]}>{`<button>Click Me!</button>`}</Text>
+            </View>
+            <TouchableOpacity style={[luxuryStyles.tryBtn, { backgroundColor: PALETTE.primary + 'cc' }]} onPress={() => setShowHtmlModal(true)}>
+              <Text style={luxuryStyles.tryBtnText}>Try</Text>
+            </TouchableOpacity>
+            <Modal visible={showHtmlModal} transparent animationType="slide" onRequestClose={() => setShowHtmlModal(false)}>
+              <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', justifyContent: 'center', alignItems: 'center' }}>
+                <View style={{ backgroundColor: '#fff', borderRadius: 16, padding: 24, alignItems: 'center', minWidth: 260 }}>
+                  <Text style={{ fontWeight: 'bold', fontSize: 18, marginBottom: 12 }}>HTML Output</Text>
+                  <View style={{ backgroundColor: '#f3f3f3', borderRadius: 8, padding: 16, marginBottom: 16 }}>
+                    <Text style={{ fontSize: 16, textAlign: 'center' }}>[Button Rendered Here]</Text>
+                    <TouchableOpacity style={{ backgroundColor: PALETTE.primary, borderRadius: 8, padding: 10, marginTop: 10 }} onPress={() => setShowHtmlModal(false)}>
+                      <Text style={{ color: '#fff', fontWeight: 'bold' }}>Click Me!</Text>
+                    </TouchableOpacity>
+                  </View>
+                  <TouchableOpacity onPress={() => setShowHtmlModal(false)}>
+                    <Text style={{ color: PALETTE.primary, fontWeight: 'bold' }}>Close</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-              <TouchableOpacity style={[luxuryStyles.tryBtn, { backgroundColor: card.color + 'cc' }]}>
-                <Text style={luxuryStyles.tryBtnText}>Try</Text>
-              </TouchableOpacity>
-            </Animated.View>
-          ))}
+            </Modal>
+          </Animated.View>
+          {/* CSS Sample */}
+          <Animated.View entering={FadeInUp.delay(200).duration(700)} style={luxuryStyles.sampleCard}>
+            <Text style={[luxuryStyles.sampleLabel, { color: PALETTE.accent }]}>CSS</Text>
+            <View style={luxuryStyles.codeBox}>
+              <Text style={[luxuryStyles.code, { color: '#000' }]}>{`button {\n  background: #61dafb;\n  border: none;\n  padding: 8px 16px;\n  border-radius: 6px;\n}`}</Text>
+            </View>
+            <TouchableOpacity style={[luxuryStyles.tryBtn, { backgroundColor: PALETTE.accent + 'cc' }]} onPress={() => setShowCssOutput(v => !v)}>
+              <Text style={luxuryStyles.tryBtnText}>Try</Text>
+            </TouchableOpacity>
+            {showCssOutput && (
+              <View style={{ marginTop: 12, alignItems: 'center' }}>
+                <Text style={{ fontWeight: 'bold', marginBottom: 6 }}>CSS Output</Text>
+                <View style={{ backgroundColor: '#61dafb', borderRadius: 6, paddingVertical: 8, paddingHorizontal: 16 }}>
+                  <Text style={{ color: '#222', fontWeight: 'bold' }}>Click Me!</Text>
+                </View>
+              </View>
+            )}
+          </Animated.View>
+          {/* JS Sample */}
+          <Animated.View entering={FadeInUp.delay(400).duration(700)} style={luxuryStyles.sampleCard}>
+            <Text style={[luxuryStyles.sampleLabel, { color: PALETTE.highlight }]}>JavaScript</Text>
+            <View style={luxuryStyles.codeBox}>
+              <Text style={[luxuryStyles.code, { color: '#000' }]}>{`document.querySelector('button').onclick = () => alert('Hello!');`}</Text>
+            </View>
+            <TouchableOpacity style={[luxuryStyles.tryBtn, { backgroundColor: PALETTE.highlight + 'cc' }]} onPress={() => setJsAlert('Hello!')}>
+              <Text style={luxuryStyles.tryBtnText}>Try</Text>
+            </TouchableOpacity>
+            {jsAlert !== '' && (
+              <View style={{ marginTop: 12, alignItems: 'center' }}>
+                <Text style={{ fontWeight: 'bold', marginBottom: 6 }}>JS Output</Text>
+                <View style={{ backgroundColor: '#FFD166', borderRadius: 6, paddingVertical: 8, paddingHorizontal: 16 }}>
+                  <Text style={{ color: '#222', fontWeight: 'bold' }}>{jsAlert}</Text>
+                </View>
+                <TouchableOpacity onPress={() => setJsAlert('')} style={{ marginTop: 8 }}>
+                  <Text style={{ color: PALETTE.highlight, fontWeight: 'bold' }}>Close</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </Animated.View>
         </View>
       </Animated.View>
 
